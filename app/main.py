@@ -1,12 +1,9 @@
 from fastapi import FastAPI, HTTPException
-from fastapi.staticfiles import StaticFiles
-from fastapi.responses import FileResponse
 from fastapi.middleware.cors import CORSMiddleware
 from app.core.config import settings
 from app.models.schemas import TopicRequest, TopicResponse, BlogRequest, BlogResponse
 from app.services.title_generator import generate_trending_topics
 from app.services.blog_generator import generate_blog
-import os
 
 app = FastAPI(
     title=settings.APP_TITLE,
@@ -17,29 +14,27 @@ app = FastAPI(
 # --- CORS Middleware ---
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # In production, specify your frontend origin
+    allow_origins=["*"],  # During development, allowing all is fine; specify in production
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-
-# --- Static Files ---
-
-# Create frontend directory if it doesn't exist
-os.makedirs("frontend", exist_ok=True)
-app.mount("/static", StaticFiles(directory="frontend"), name="static")
+# --- API Endpoints ---
 
 @app.get("/")
-async def serve_index():
-    return FileResponse("frontend/index.html")
-
-
-# --- API Endpoints ---
+@app.get("/health")
+async def health_check():
+    """Diagnostic endpoint to verify the backend is online."""
+    return {
+        "status": "online",
+        "message": f"{settings.APP_TITLE} is active",
+        "version": settings.APP_VERSION
+    }
 
 @app.get("/api/defaults")
 async def get_defaults():
-    """Returns default settings for the frontend to pre-fill forms."""
+    """Returns default values for the frontend to pre-fill forms."""
     return {
         "category": settings.DEFAULT_BLOG_CATEGORY,
         "competitors": settings.DEFAULT_COMPETITORS,
@@ -49,12 +44,7 @@ async def get_defaults():
         "internal_links": settings.DEFAULT_INTERNAL_LINKS
     }
 
-@app.get("/health")
-async def health_check():
-    return {"status": "online health", "message": f"{settings.APP_TITLE} is running"}
-
 @app.post("/api/generate-topics", response_model=TopicResponse)
-
 async def api_generate_topics(request: TopicRequest):
     try:
         topics = generate_trending_topics(request.category, request.competitors)
@@ -75,3 +65,4 @@ async def api_generate_blog(request: BlogRequest):
         return BlogResponse(topic=request.topic, content=content)
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
