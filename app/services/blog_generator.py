@@ -1,41 +1,5 @@
-import os
-import json
-import httpx
-from datetime import datetime
-from openai import OpenAI
-from dotenv import load_dotenv
-
-
-load_dotenv()
-
-
-client = OpenAI(
-    api_key=os.getenv("OPENAI_API_KEY"),
-    http_client=httpx.Client(verify=False),
-)
-
-
-# ── Hardcoded blog parameters ─────────────────────────────────────────────────
-
-
-TOPIC = "Tailored Financial Schemes and Tips for Female Entrepreneurs in India"
-TARGET_AUDIENCE = "Small business owners and entrepreneurs in Tier 2 and Tier 3 cities"
-WORD_COUNT_GOAL = 2500
-SPECIFIC_GOAL = "Encourage female entrepreneurs to explore expansion loans for their businesses"
-
-
-INTERNAL_LINKS = [
-    "https://creditsaison.in/business-loan",
-    "https://creditsaison.in/vyapari-loans",
-    "https://creditsaison.in/home-loan",
-    "https://creditsaison.in/doctor-loan",
-    "https://creditsaison.in/small-business-loan",
-    "https://creditsaison.in/loan-against-property",
-]
-
-
-# ── Prompts ───────────────────────────────────────────────────────────────────
-
+from typing import List
+from app.core.openai_utils import client
 
 SYSTEM_PROMPT = """\
 You are the Lead Brand Strategist and Senior Content Writer for Credit Saison India — \
@@ -94,18 +58,14 @@ Imagery direction (when describing visuals): Authentic Indian contexts — real 
 real goals, diverse settings across Tier 1, 2, and 3 cities. No stock-photo clichés or exaggerated visuals.
 """
 
-
-
-
 def build_user_prompt(
     topic: str,
     audience: str,
     word_count: int,
     specific_goal: str,
-    internal_links: list[str],
+    internal_links: List[str],
 ) -> str:
     links_formatted = "\n".join(f"  - {url}" for url in internal_links)
-
 
     return f"""\
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -184,18 +144,15 @@ QUALITY CHECKLIST (verify before outputting)
 ☐ CTA is encouraging, not pressuring
 """
 
-
-
-
 def generate_blog(
     topic: str,
     audience: str,
     word_count: int,
     specific_goal: str,
-    internal_links: list[str],
+    internal_links: List[str],
 ) -> str:
+    """Generates a full blog post using OpenAI's gpt-4o model."""
     user_prompt = build_user_prompt(topic, audience, word_count, specific_goal, internal_links)
-
 
     response = client.chat.completions.create(
         model="gpt-4o",
@@ -207,65 +164,4 @@ def generate_blog(
         max_tokens=6000,
     )
 
-
     return response.choices[0].message.content.strip()
-
-
-
-
-def save_output(content: str, topic: str) -> str:
-    os.makedirs("output", exist_ok=True)
-    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    slug = topic.lower().replace(" ", "_")[:40]
-    filename = f"output/blog_{slug}_{timestamp}.md"
-
-
-    metadata = {
-        "topic": topic,
-        "target_audience": TARGET_AUDIENCE,
-        "word_count_goal": WORD_COUNT_GOAL,
-        "specific_goal": SPECIFIC_GOAL,
-        "generated_at": datetime.now().isoformat(),
-    }
-
-
-    header = "---\n" + "\n".join(f"{k}: {v}" for k, v in metadata.items()) + "\n---\n\n"
-
-
-    with open(filename, "w", encoding="utf-8") as f:
-        f.write(header + content)
-
-
-    print(f"Blog saved to: {filename}")
-    return filename
-
-
-
-
-def run():
-    print(f"\nGenerating blog: '{TOPIC}'")
-    print(f"Audience       : {TARGET_AUDIENCE}")
-    print(f"Goal           : {SPECIFIC_GOAL}\n")
-
-
-    content = generate_blog(
-        topic=TOPIC,
-        audience=TARGET_AUDIENCE,
-        word_count=WORD_COUNT_GOAL,
-        specific_goal=SPECIFIC_GOAL,
-        internal_links=INTERNAL_LINKS,
-    )
-
-
-    filename = save_output(content, TOPIC)
-    print(f"\nDone. Open '{filename}' to review the article.")
-    return content
-
-
-
-
-if __name__ == "__main__":
-    run()
-
-
-
