@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import ReactMarkdown from 'react-markdown';
-import { Sparkles, ArrowLeft, Copy, Download, Loader2, CheckCircle2, AlertCircle } from 'lucide-react';
+import { Sparkles, ArrowLeft, Copy, Download, Loader2, CheckCircle2, AlertCircle, Layout, BookOpen, Settings } from 'lucide-react';
 import './App.css';
 
 const API_BASE = 'http://127.0.0.1:8000';
@@ -116,9 +116,9 @@ function App() {
 
   // --- Render Helpers ---
   const renderStatusIcon = () => {
-    if (status.type === 'pending') return <Loader2 className="spinner" size={14} color="#f59e0b" />;
-    if (status.type === 'error') return <AlertCircle color="#ef4444" size={14} />;
-    return <CheckCircle2 color="#10b981" size={14} />;
+    if (status.type === 'pending') return <Loader2 className="spinner" size={16} color="var(--warning-color)" />;
+    if (status.type === 'error') return <AlertCircle color="var(--error-color)" size={16} />;
+    return <CheckCircle2 color="var(--success-color)" size={16} />;
   };
 
   return (
@@ -135,27 +135,27 @@ function App() {
         {/* Sidebar */}
         <aside className="config-sidebar">
           <div className="card">
-            <h3>Generation Settings</h3>
+            <h3><Settings size={20} /> Generation Settings</h3>
             <div className="input-group">
               <label>Blog Category</label>
-              <input 
-                type="text" 
+              <input
+                type="text"
                 placeholder="e.g. MSME Loan"
-                value={config.category} 
-                onChange={e => setConfig({...config, category: e.target.value})}
+                value={config.category}
+                onChange={e => setConfig({ ...config, category: e.target.value })}
               />
             </div>
             <div className="input-group">
               <label>Competitors</label>
-              <textarea 
-                rows="3" 
+              <textarea
+                rows="3"
                 placeholder="Competitor names, comma separated"
-                value={config.competitors} 
-                onChange={e => setConfig({...config, competitors: e.target.value})}
+                value={config.competitors}
+                onChange={e => setConfig({ ...config, competitors: e.target.value })}
               />
             </div>
-            <button 
-              className="primary-btn" 
+            <button
+              className="primary-btn"
               onClick={handleGenerateTopics}
               disabled={loading.topics}
             >
@@ -164,32 +164,32 @@ function App() {
             </button>
           </div>
 
-          <div className="card" style={{ marginTop: '2rem' }}>
-            <h3>Blog Parameters</h3>
+          <div className="card">
+            <h3><Layout size={20} /> Blog Parameters</h3>
             <div className="input-group">
               <label>Target Audience</label>
-              <input 
-                type="text" 
+              <input
+                type="text"
                 placeholder="e.g. Entrepreneurs in India"
-                value={config.audience} 
-                onChange={e => setConfig({...config, audience: e.target.value})}
+                value={config.audience}
+                onChange={e => setConfig({ ...config, audience: e.target.value })}
               />
             </div>
             <div className="input-group">
               <label>Word Count Goal</label>
-              <input 
-                type="number" 
-                value={config.wordCount} 
-                onChange={e => setConfig({...config, wordCount: parseInt(e.target.value)})}
+              <input
+                type="number"
+                value={config.wordCount}
+                onChange={e => setConfig({ ...config, wordCount: parseInt(e.target.value) })}
               />
             </div>
             <div className="input-group">
               <label>Specific Goal</label>
-              <textarea 
-                rows="2" 
+              <textarea
+                rows="2"
                 placeholder="What should this blog achieve?"
-                value={config.goal} 
-                onChange={e => setConfig({...config, goal: e.target.value})}
+                value={config.goal}
+                onChange={e => setConfig({ ...config, goal: e.target.value })}
               />
             </div>
           </div>
@@ -200,54 +200,56 @@ function App() {
           {view === 'topics' ? (
             <div className="topics-view">
               <h2>Available Topics</h2>
-              <p style={{ color: 'var(--text-secondary)', marginBottom: '2.5rem', fontSize: '1.1rem' }}>
+              <p className="subtitle" style={{ color: 'var(--text-secondary)', marginBottom: '2.5rem', fontSize: '1.2rem' }}>
                 Select a trending topic to generate a high-quality, SEO-optimized blog post for Credit Saison India.
               </p>
-              
+
               <div className="topic-grid">
                 {topics.length > 0 ? topics.map((topic, i) => (
                   <div key={i} className="topic-card" onClick={() => handleSelectTopic(topic)}>
                     <div className="topic-tag">
-                      Topic #{i+1}
+                      Topic #{i + 1}
                     </div>
                     <h4>{topic}</h4>
-                    <div style={{ marginTop: '1rem', fontSize: '0.95rem', fontWeight: '600', color: 'var(--accent-color)', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-                      Generate Post <Sparkles size={14} />
+                    <div className="card-footer" style={{ marginTop: 'auto', paddingTop: '1.5rem', borderTop: '1px solid var(--border-color)', fontSize: '0.95rem', fontWeight: '700', color: 'var(--primary-color)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                      Generate Post <Sparkles size={16} />
                     </div>
                   </div>
                 )) : (
-                  <div style={{ padding: '6rem 2rem', textAlign: 'center', gridColumn: '1/-1', background: '#fff', borderRadius: '1rem', border: '1.5px dashed var(--border-color)' }}>
-                    <div style={{ fontSize: '3.5rem', marginBottom: '1.5rem' }}>✨</div>
-                    <h3 style={{ marginBottom: '0.5rem' }}>No Topics Generated Yet</h3>
-                    <p style={{ color: 'var(--text-secondary)' }}>Configure your settings in the sidebar and click "Generate Trending Topics" to start.</p>
+                  <div className="empty-state" style={{ padding: '8rem 2rem', textAlign: 'center', gridColumn: '1/-1', background: 'white', borderRadius: 'var(--border-radius)', border: '2px dashed var(--border-color)', boxShadow: 'var(--shadow-lg)' }}>
+                    <div style={{ fontSize: '4rem', marginBottom: '1.5rem' }}>✨</div>
+                    <h3 style={{ marginBottom: '0.5rem', justifyContent: 'center' }}>No Topics Generated Yet</h3>
+                    <p style={{ color: 'var(--text-secondary)', fontSize: '1.1rem' }}>Configure your settings in the sidebar and click "Generate Trending Topics" to start.</p>
                   </div>
                 )}
               </div>
             </div>
           ) : (
             <div className="blog-view">
-              <button 
-                className="btn-back" 
-                style={{ background: 'none', border: 'none', color: 'var(--text-secondary)', cursor: 'pointer', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '1rem', fontWeight: '500' }}
+              <button
+                className="btn-back"
                 onClick={() => setView('topics')}
               >
                 <ArrowLeft size={18} /> Back to Topics
               </button>
-              
-              <div className="blog-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start', gap: '2rem', marginBottom: '2.5rem' }}>
-                <h2 style={{ flex: 1 }}>{selectedTopic}</h2>
-                <div style={{ display: 'flex', gap: '0.75rem', flexShrink: 0, marginTop: '0.25rem' }}>
+
+              <div className="blog-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', gap: '2rem', margin: '2rem 0 3rem' }}>
+                <div style={{ flex: 1 }}>
+                  <div className="topic-tag" style={{ marginBottom: '1rem' }}>Selected Topic</div>
+                  <h2 style={{ margin: 0 }}>{selectedTopic}</h2>
+                </div>
+                <div style={{ display: 'flex', gap: '1rem', paddingBottom: '0.5rem' }}>
                   <button className="secondary-btn" onClick={copyToClipboard}><Copy size={18} /> Copy</button>
                   <button className="secondary-btn" onClick={downloadMarkdown}><Download size={18} /> .md</button>
                 </div>
               </div>
 
-              <div className="card blog-content-wrapper">
+              <div className="blog-content-wrapper card">
                 {loading.blog ? (
-                  <div style={{ textAlign: 'center', padding: '6rem 2rem' }}>
-                    <Loader2 className="spinner-large" style={{ margin: '0 auto 2.5rem' }} size={48} />
-                    <h3 style={{ fontSize: '1.5rem' }}>Crafting your professional blog...</h3>
-                    <p style={{ color: 'var(--text-secondary)', fontSize: '1.1rem' }}>Our AI is researching and writing deep, expert-level content for you.</p>
+                  <div className="loading-state" style={{ textAlign: 'center', padding: '8rem 2rem' }}>
+                    <Loader2 className="spinner-large" style={{ margin: '0 auto 3rem' }} size={64} />
+                    <h3 style={{ fontSize: '2rem', justifyContent: 'center' }}>Crafting your professional blog...</h3>
+                    <p style={{ color: 'var(--text-secondary)', fontSize: '1.25rem', marginTop: '1rem' }}>Our AI is researching and writing deep, expert-level content for you.</p>
                   </div>
                 ) : (
                   <div className="markdown-body">
