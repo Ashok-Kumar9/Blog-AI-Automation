@@ -13,7 +13,7 @@ const TopicsGrid = ({ topics, onSelectTopic }) => {
         {topics.length > 0 ? topics.map((topic, i) => (
           <div key={i} className="topic-card" onClick={() => onSelectTopic(topic)}>
             <div className="topic-tag">
-              Topic #{i + 1}
+              #{i + 1}
             </div>
             <h4>{topic}</h4>
             <div className="card-footer" style={{ marginTop: 'auto', paddingTop: '1rem', borderTop: '1px solid var(--border-color)', fontSize: '0.85rem', fontWeight: '700', color: 'var(--primary-color)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
