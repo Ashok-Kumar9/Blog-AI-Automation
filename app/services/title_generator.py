@@ -35,7 +35,7 @@ Output format (strict):
 
     raw = response.output_text.strip()
     topics = [
-        line.lstrip("0123456789.-) ").strip()
+        line.lstrip("0123456789.-) ").strip().strip('"')
         for line in raw.splitlines()
         if line.strip() and line.strip()[0].isdigit()
     ]
