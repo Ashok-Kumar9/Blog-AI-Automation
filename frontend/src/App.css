@@ -73,8 +73,8 @@ h1, h2, h3, h4 {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 2rem;
-  padding: 1rem 2rem;
+  margin-bottom: 1rem;
+  padding: 0.6rem 1.5rem;
   background: var(--glass-bg);
   backdrop-filter: var(--glass-blur);
   border-radius: 0.5rem;
@@ -83,7 +83,7 @@ h1, h2, h3, h4 {
 }
 
 .brand-name {
-  font-size: 1.25rem;
+  font-size: 1.1rem;
   color: var(--text-primary);
 }
 
@@ -96,12 +96,12 @@ h1, h2, h3, h4 {
 
 .status-badge {
   background: white;
-  padding: 0.6rem 1.25rem;
+  padding: 0.4rem 0.8rem;
   border-radius: 0.4rem;
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   font-weight: 600;
   color: var(--text-secondary);
   border: 1px solid var(--border-color);
