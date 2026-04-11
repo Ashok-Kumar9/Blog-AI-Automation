@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import ReactMarkdown from 'react-markdown';
-import { Sparkles, ArrowLeft, Copy, Download, Loader2, CheckCircle2, AlertCircle, Layout, BookOpen, Settings } from 'lucide-react';
+import { Sparkles, ArrowLeft, Copy, Download, Loader2, CheckCircle2, AlertCircle, Layout, BookOpen, Settings, X } from 'lucide-react';
 import './App.css';
 
 const API_BASE = 'http://127.0.0.1:8000';
@@ -31,6 +31,8 @@ function App() {
   const [view, setView] = useState(() => {
     return localStorage.getItem('blog_view') || 'topics';
   });
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [pendingTopic, setPendingTopic] = useState(null);
 
   // --- Persistence Effects ---
   useEffect(() => {
@@ -101,7 +103,16 @@ function App() {
     }
   };
 
-  const handleSelectTopic = async (topic) => {
+  const handleSelectTopic = (topic) => {
+    setPendingTopic(topic);
+    setIsModalOpen(true);
+  };
+
+  const handleFinalizeGeneration = async () => {
+    if (!pendingTopic) return;
+    
+    const topic = pendingTopic;
+    setIsModalOpen(false);
     setSelectedTopic(topic);
     setView('blog');
     setLoading({ ...loading, blog: true });
@@ -188,36 +199,6 @@ function App() {
               Generate Trending Topics
             </button>
           </div>
-
-          <div className="card">
-            <h3><Layout size={20} /> Blog Parameters</h3>
-            <div className="input-group">
-              <label>Target Audience</label>
-              <input
-                type="text"
-                placeholder="e.g. Entrepreneurs in India"
-                value={config.audience}
-                onChange={e => setConfig({ ...config, audience: e.target.value })}
-              />
-            </div>
-            <div className="input-group">
-              <label>Word Count Goal</label>
-              <input
-                type="number"
-                value={config.wordCount}
-                onChange={e => setConfig({ ...config, wordCount: parseInt(e.target.value) })}
-              />
-            </div>
-            <div className="input-group">
-              <label>Specific Goal</label>
-              <textarea
-                rows="2"
-                placeholder="What should this blog achieve?"
-                value={config.goal}
-                onChange={e => setConfig({ ...config, goal: e.target.value })}
-              />
-            </div>
-          </div>
         </aside>
 
         {/* Workspace */}
@@ -225,7 +206,7 @@ function App() {
           {view === 'topics' ? (
             <div className="topics-view">
               <h2>Available Topics</h2>
-              <p className="subtitle" style={{ color: 'var(--text-secondary)', marginBottom: '2.5rem', fontSize: '1.2rem' }}>
+              <p className="subtitle" style={{ color: 'var(--text-secondary)', marginBottom: '2.5rem', fontSize: '1rem' }}>
                 Select a trending topic to generate a high-quality, SEO-optimized blog post for Credit Saison India.
               </p>
 
@@ -236,7 +217,7 @@ function App() {
                       Topic #{i + 1}
                     </div>
                     <h4>{topic}</h4>
-                    <div className="card-footer" style={{ marginTop: 'auto', paddingTop: '1.5rem', borderTop: '1px solid var(--border-color)', fontSize: '0.95rem', fontWeight: '700', color: 'var(--primary-color)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                    <div className="card-footer" style={{ marginTop: 'auto', paddingTop: '1.5rem', borderTop: '1px solid var(--border-color)', fontSize: '0.85rem', fontWeight: '700', color: 'var(--primary-color)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                       Generate Post <Sparkles size={16} />
                     </div>
                   </div>
@@ -244,7 +225,7 @@ function App() {
                   <div className="empty-state" style={{ padding: '8rem 2rem', textAlign: 'center', gridColumn: '1/-1', background: 'white', borderRadius: 'var(--border-radius)', border: '2px dashed var(--border-color)', boxShadow: 'var(--shadow-lg)' }}>
                     <div style={{ fontSize: '4rem', marginBottom: '1.5rem' }}>✨</div>
                     <h3 style={{ marginBottom: '0.5rem', justifyContent: 'center' }}>No Topics Generated Yet</h3>
-                    <p style={{ color: 'var(--text-secondary)', fontSize: '1.1rem' }}>Configure your settings in the sidebar and click "Generate Trending Topics" to start.</p>
+                    <p style={{ color: 'var(--text-secondary)', fontSize: '0.95rem' }}>Configure your settings in the sidebar and click "Generate Trending Topics" to start.</p>
                   </div>
                 )}
               </div>
@@ -286,6 +267,63 @@ function App() {
           )}
         </section>
       </main>
+
+      {/* Blog Parameters Modal */}
+      {isModalOpen && (
+        <div className="modal-overlay">
+          <div className="modal-content card">
+            <button className="modal-close" onClick={() => setIsModalOpen(false)}>
+              <X size={24} />
+            </button>
+            <div className="modal-header">
+              <h3><Layout size={24} /> Blog Parameters</h3>
+              <p>Configure the specifics for: <strong>{pendingTopic}</strong></p>
+            </div>
+            
+            <div className="modal-body">
+              <div className="input-group">
+                <label>Target Audience</label>
+                <input
+                  type="text"
+                  placeholder="e.g. Entrepreneurs in India"
+                  value={config.audience}
+                  onChange={e => setConfig({ ...config, audience: e.target.value })}
+                />
+              </div>
+              
+              <div className="input-row">
+                <div className="input-group">
+                  <label>Word Count Goal</label>
+                  <input
+                    type="number"
+                    value={config.wordCount}
+                    onChange={e => setConfig({ ...config, wordCount: parseInt(e.target.value) || 0 })}
+                  />
+                </div>
+              </div>
+
+              <div className="input-group">
+                <label>Specific Goal</label>
+                <textarea
+                  rows="3"
+                  placeholder="What should this blog achieve? (e.g. Brand awareness, Lead generation)"
+                  value={config.goal}
+                  onChange={e => setConfig({ ...config, goal: e.target.value })}
+                />
+              </div>
+            </div>
+
+            <div className="modal-footer">
+              <button 
+                className="primary-btn" 
+                onClick={handleFinalizeGeneration}
+              >
+                <Sparkles size={18} /> Generate Full Blog Post
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
