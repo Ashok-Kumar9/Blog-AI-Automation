@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, FileText, Users, BarChart2, Target, Link as LinkIcon, Trash2, Plus, Sparkles, ChevronDown, ChevronUp } from 'lucide-react';
+import { X, FileText, Users, BarChart2, Target, Link as LinkIcon, Trash2, Plus, Sparkles, ChevronDown, ChevronUp, RotateCcw } from 'lucide-react';
 
 const ParametersModal = ({ isOpen, onClose, pendingTopic, config, setConfig, onFinalize }) => {
   const [newLink, setNewLink] = useState({ product_keyword: '', url: '', integration_count: 1 });
@@ -19,6 +19,17 @@ const ParametersModal = ({ isOpen, onClose, pendingTopic, config, setConfig, onF
   const removeInternalLink = (index) => {
     const updatedLinks = config.internalLinks.filter((_, i) => i !== index);
     setConfig({ ...config, internalLinks: updatedLinks });
+  };
+
+  const handleClear = () => {
+    setConfig({
+      ...config,
+      audience: '',
+      wordCount: 0,
+      goal: '',
+      internalLinks: []
+    });
+    setNewLink({ product_keyword: '', url: '', integration_count: 1 });
   };
 
   const isFormValid = 
@@ -47,7 +58,7 @@ const ParametersModal = ({ isOpen, onClose, pendingTopic, config, setConfig, onF
                 type="text"
                 className="grey-input"
                 placeholder="e.g. Entrepreneurs in India"
-                value={config.audience}
+                value={config.audience || ''}
                 onChange={e => setConfig({ ...config, audience: e.target.value })}
               />
             </div>
@@ -57,7 +68,7 @@ const ParametersModal = ({ isOpen, onClose, pendingTopic, config, setConfig, onF
                 type="number"
                 className="grey-input"
                 placeholder="1200"
-                value={config.wordCount}
+                value={config.wordCount || ''}
                 onChange={e => setConfig({ ...config, wordCount: parseInt(e.target.value) || 0 })}
               />
             </div>
@@ -69,7 +80,7 @@ const ParametersModal = ({ isOpen, onClose, pendingTopic, config, setConfig, onF
               rows="4"
               className="grey-input"
               placeholder="What should this blog achieve? e.g. Drive organic traffic to the SaaS pricing page..."
-              value={config.goal}
+              value={config.goal || ''}
               onChange={e => setConfig({ ...config, goal: e.target.value })}
             />
           </div>
@@ -137,13 +148,19 @@ const ParametersModal = ({ isOpen, onClose, pendingTopic, config, setConfig, onF
             <div className={`status-dot ${!isFormValid ? 'dot-waiting' : ''}`}></div>
             <span>{isFormValid ? "AI Content Engine Ready" : "Please fill all fields and add at least 1 internal link."}</span>
           </div>
-          <button 
-            className={`generate-fullscreen-btn ${!isFormValid ? 'btn-disabled' : ''}`} 
-            onClick={onFinalize}
-            disabled={!isFormValid}
-          >
-            Generate Blog Post <Sparkles size={18} />
-          </button>
+          
+          <div className="footer-actions">
+            <button className="clear-params-btn" onClick={handleClear}>
+              <RotateCcw size={16} /> Clear All
+            </button>
+            <button 
+              className={`generate-fullscreen-btn ${!isFormValid ? 'btn-disabled' : ''}`} 
+              onClick={onFinalize}
+              disabled={!isFormValid}
+            >
+              Generate Blog Post <Sparkles size={18} />
+            </button>
+          </div>
         </div>
       </div>
     </div>

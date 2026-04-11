@@ -8,12 +8,9 @@ const TopicsGrid = ({ topics, generatedBlogs, onSelectTopic, onNewCategory, cate
     <div className="topics-page">
       <div className="topics-page-header">
         <div>
-          <h2 className="topics-heading">Trending Topics</h2>
-          {category && (
-            <div className="topics-subtitle">
-              Generated for <span className="highlight-category">{category}</span>
-            </div>
-          )}
+          <h2 className="topics-heading">
+            Trending Topics {category && <>for: <span className="highlight-category">{category}</span></>}
+          </h2>
         </div>
         <button className="new-category-btn" onClick={onNewCategory}>
           <Search size={15} />
