@@ -1,5 +1,7 @@
 import React from 'react';
-import { Sparkles, CheckCircle2, RefreshCw, Tag } from 'lucide-react';
+import { Sparkles, CheckCircle2, RefreshCw, Tag, Briefcase, TrendingUp, Lightbulb, Target, Monitor, Rocket } from 'lucide-react';
+
+const TOPIC_ICONS = [Briefcase, TrendingUp, Lightbulb, Target, Monitor, Rocket];
 
 const TopicsGrid = ({ topics, generatedBlogs, onSelectTopic, onNewCategory, category }) => {
   return (
@@ -22,25 +24,37 @@ const TopicsGrid = ({ topics, generatedBlogs, onSelectTopic, onNewCategory, cate
       <div className="topic-grid">
         {topics.map((topic, i) => {
           const hasBlog = !!generatedBlogs?.[topic];
+          const Icon = TOPIC_ICONS[i % TOPIC_ICONS.length];
           return (
             <div
               key={i}
               className={`topic-card ${hasBlog ? 'topic-card--done' : ''}`}
-              onClick={() => onSelectTopic(topic)}
             >
               {hasBlog && (
                 <div className="blog-ready-badge">
                   <CheckCircle2 size={12} /> Blog Ready
                 </div>
               )}
-              <div className="topic-tag">#{i + 1}</div>
+              
+              <div className="topic-icon-box">
+                <Icon size={20} />
+              </div>
+              
               <h4>{topic}</h4>
+              
               <div className="topic-card-footer">
-                {hasBlog ? (
-                  <>View Blog <CheckCircle2 size={15} /></>
-                ) : (
-                  <>Generate Post <Sparkles size={15} /></>
-                )}
+                <div className="ai-optimized-label">
+                  <Sparkles size={14} /> AI Optimized
+                </div>
+                <button 
+                  className={`generate-post-btn ${hasBlog ? 'btn-view' : ''}`}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onSelectTopic(topic);
+                  }}
+                >
+                  {hasBlog ? 'View Post' : 'Generate Post'}
+                </button>
               </div>
             </div>
           );
