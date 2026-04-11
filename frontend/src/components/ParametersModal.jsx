@@ -22,109 +22,117 @@ const ParametersModal = ({ isOpen, onClose, pendingTopic, config, setConfig, onF
   };
 
   return (
-    <div className="modal-overlay" onClick={onClose}>
-      <div className="modal-content" onClick={e => e.stopPropagation()}>
-        <button className="modal-close" onClick={onClose}><X size={18} /></button>
+    <div className="modal-fullscreen-overlay">
+      <div className="modal-fullscreen-content">
+        <button className="modal-close-fullscreen" onClick={onClose}><X size={24} /></button>
 
-        <div className="modal-header">
+        <div className="fullscreen-header">
           <div className="modal-topic-badge">
             <FileText size={13} /> {pendingTopic}
           </div>
-          <h3>Configure Blog Parameters</h3>
-          <p>Tailor the output — audience, length and goals</p>
+          <h1>Configure Blog Parameters</h1>
         </div>
 
-        <div className="modal-body">
-          {/* Row 1 */}
-          <div className="modal-row">
-            <div className="input-group">
-              <label><Users size={13} /> Target Audience</label>
+        <div className="fullscreen-body">
+          <div className="form-row-2col">
+            <div className="form-group">
+              <label><Users size={16} /> Target Audience</label>
               <input
                 type="text"
+                className="grey-input"
                 placeholder="e.g. Entrepreneurs in India"
                 value={config.audience}
                 onChange={e => setConfig({ ...config, audience: e.target.value })}
               />
             </div>
-            <div className="input-group">
-              <label><BarChart2 size={13} /> Word Count</label>
+            <div className="form-group">
+              <label><BarChart2 size={16} /> Word Count</label>
               <input
                 type="number"
+                className="grey-input"
+                placeholder="1200"
                 value={config.wordCount}
                 onChange={e => setConfig({ ...config, wordCount: parseInt(e.target.value) || 0 })}
               />
             </div>
           </div>
 
-          {/* Row 2 */}
-          <div className="input-group">
-            <label><Target size={13} /> Specific Goal</label>
+          <div className="form-group">
+            <label><Target size={16} /> Specific Goal</label>
             <textarea
-              rows="3"
-              placeholder="What should this blog achieve? e.g. Drive organic traffic, promote MSME loan product"
+              rows="4"
+              className="grey-input"
+              placeholder="What should this blog achieve? e.g. Drive organic traffic to the SaaS pricing page..."
               value={config.goal}
               onChange={e => setConfig({ ...config, goal: e.target.value })}
             />
           </div>
 
-          {/* Accordion: Internal Links */}
-          <div className="links-accordion">
-            <button className="links-accordion-trigger" onClick={() => setLinksOpen(v => !v)}>
-              <span><LinkIcon size={13} /> Internal Linking Strategy</span>
-              <span className="links-accordion-meta">
-                {config.internalLinks?.length > 0 && (
-                  <span className="links-count-badge">{config.internalLinks.length}</span>
-                )}
-                {linksOpen ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
-              </span>
-            </button>
-
-            {linksOpen && (
-              <div className="links-accordion-body">
-                <div className="links-list">
-                  {config.internalLinks?.map((link, index) => (
-                    <div key={index} className="link-item">
-                      <div className="link-info">
-                        <span className="link-keyword">{link.product_keyword}</span>
-                        <span className="link-url">{link.url}</span>
-                        <span className="link-count">×{link.integration_count}</span>
-                      </div>
-                      <button className="remove-link-btn" onClick={() => removeInternalLink(index)}>
-                        <Trash2 size={13} />
-                      </button>
-                    </div>
-                  ))}
-                </div>
-                <div className="add-link-form">
+          <div className="internal-links-section-fullscreen">
+            <div className="internal-links-header">
+              <label><LinkIcon size={16} /> Internal Linking Strategy</label>
+              <span className="advanced-settings-label">ADVANCED SETTINGS</span>
+            </div>
+            
+            <div className="internal-links-box">
+              <div className="add-link-form-fullscreen">
+                <div className="form-group-small">
+                  <label>KEYWORD</label>
                   <input
                     type="text"
-                    placeholder="Keyword"
+                    placeholder="e.g. SEO tips"
                     value={newLink.product_keyword}
                     onChange={e => setNewLink({ ...newLink, product_keyword: e.target.value })}
                   />
+                </div>
+                <div className="form-group-small">
+                  <label>TARGET URL</label>
                   <input
                     type="text"
-                    placeholder="URL"
+                    placeholder="https://curator.io/blog/seo"
                     value={newLink.url}
                     onChange={e => setNewLink({ ...newLink, url: e.target.value })}
                   />
+                </div>
+                <div className="form-group-small count-col">
+                  <label>COUNT</label>
                   <input
                     type="number"
                     value={newLink.integration_count}
                     onChange={e => setNewLink({ ...newLink, integration_count: parseInt(e.target.value) || 1 })}
                   />
-                  <button className="add-btn" onClick={addInternalLink}>
-                    <Plus size={16} />
+                </div>
+                <div className="form-group-small btn-col">
+                  <label>&nbsp;</label>
+                  <button className="add-btn-fullscreen" onClick={addInternalLink}>
+                    <Plus size={20} />
                   </button>
                 </div>
               </div>
-            )}
+              
+              {config.internalLinks?.length > 0 && (
+                <div className="links-pill-list">
+                  {config.internalLinks.map((link, index) => (
+                    <div key={index} className="link-pill">
+                      <span className="pill-keyword">{link.product_keyword}</span>
+                      <span className="pill-url">{link.url}</span>
+                      <span className="pill-count">×{link.integration_count}</span>
+                      <button className="pill-remove" title="Remove link" onClick={() => removeInternalLink(index)}><X size={14} /></button>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
         </div>
 
-        <div className="modal-footer">
-          <button className="primary-btn" onClick={onFinalize}>
-            <Sparkles size={18} /> Generate Blog Post
+        <div className="fullscreen-footer">
+          <div className="footer-status">
+            <div className="status-dot"></div>
+            <span>AI Content Engine Ready</span>
+          </div>
+          <button className="generate-fullscreen-btn" onClick={onFinalize}>
+            Generate Blog Post <Sparkles size={18} />
           </button>
         </div>
       </div>
