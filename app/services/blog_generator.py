@@ -131,6 +131,9 @@ and step-by-step processes.
 3. INTERNAL LINKS:
    The following links must be embedded within the article body. For each link:
    - Use the specified keyword (or a close natural variant) as the hyperlink anchor text.
+   - Prioritise placing the FIRST instance of each link as early as possible — ideally within
+     the introduction or the first two body sections. Subsequent instances may be distributed
+     across later sections.
    - Embed it exactly the stated number of times across different sections — never in the same paragraph twice.
    - Only place links where they genuinely serve the reader. Do not force or cluster them.
    - Format each as a standard markdown hyperlink: [anchor text](url)
@@ -164,6 +167,7 @@ QUALITY CHECKLIST (verify before outputting)
 ☐ Currency figures use Indian formatting (₹X,XX,XXX)
 ☐ EMI, KYC, NBFC explained on first use
 ☐ Each internal link appears exactly the specified number of times with natural anchor text
+☐ The first instance of every internal link appears in the introduction or the first two body sections
 ☐ No two instances of the same link appear in the same paragraph
 ☐ SEO meta block is complete and within character limits
 ☐ CTA is encouraging, not pressuring
