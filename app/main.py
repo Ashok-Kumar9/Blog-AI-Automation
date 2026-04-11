@@ -47,7 +47,7 @@ async def get_defaults():
 @app.post("/api/generate-topics", response_model=TopicResponse)
 async def api_generate_topics(request: TopicRequest):
     try:
-        topics = generate_trending_topics(request.category, request.competitors)
+        topics = generate_trending_topics(request.category)
         return TopicResponse(category=request.category, topics=topics)
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
