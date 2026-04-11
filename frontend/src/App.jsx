@@ -3,7 +3,7 @@ import ReactMarkdown from 'react-markdown';
 import { Sparkles, ArrowLeft, Copy, Download, Loader2, CheckCircle2, AlertCircle, Layout, BookOpen, Settings, X, Link as LinkIcon, Plus, Trash2 } from 'lucide-react';
 import './App.css';
 
-const API_BASE = 'http://127.0.0.1:8000';
+import { blogService } from './services/blogService';
 
 function App() {
   // --- State ---
@@ -69,15 +69,7 @@ function App() {
     setTopics([]);
 
     try {
-      const resp = await fetch(`${API_BASE}/api/generate-topics`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          category: config.category
-        }),
-      });
-      if (!resp.ok) throw new Error('Generation failed');
-      const data = await resp.json();
+      const data = await blogService.generateTopics(config.category);
       setTopics(data.topics);
       setStatus({ text: `Found ${data.topics.length} Topics`, type: 'success' });
     } catch (err) {
@@ -105,19 +97,13 @@ function App() {
     setBlogContent('');
 
     try {
-      const resp = await fetch(`${API_BASE}/api/generate-blog`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          topic,
-          target_audience: config.audience,
-          word_count_goal: config.wordCount,
-          specific_goal: config.goal,
-          internal_links: config.internalLinks,
-        }),
+      const data = await blogService.generateBlog({
+        topic,
+        audience: config.audience,
+        wordCount: config.wordCount,
+        goal: config.goal,
+        internalLinks: config.internalLinks,
       });
-      if (!resp.ok) throw new Error('Article generation failed');
-      const data = await resp.json();
       setBlogContent(data.content);
       setStatus({ text: 'Blog Generated!', type: 'success' });
     } catch (err) {
