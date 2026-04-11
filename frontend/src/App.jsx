@@ -4,13 +4,21 @@ import './App.css';
 
 // Components
 import Header from './components/Header';
-import ConfigSidebar from './components/ConfigSidebar';
+import EmptyState from './components/EmptyState';
+import TopicsLoader from './components/TopicsLoader';
 import TopicsGrid from './components/TopicsGrid';
 import BlogViewer from './components/BlogViewer';
 import ParametersModal from './components/ParametersModal';
 
 function App() {
-  // --- State ---
+  // --- View: 'empty' | 'loading' | 'topics' | 'blog'
+  const [view, setView] = useState(() => {
+    const topics = localStorage.getItem('blog_topics');
+    const parsed = topics ? JSON.parse(topics) : [];
+    return parsed.length > 0 ? 'topics' : 'empty';
+  });
+
+  // --- Config (persisted)
   const [config, setConfig] = useState(() => {
     const saved = localStorage.getItem('blog_config');
     const parsed = saved ? JSON.parse(saved) : {};
@@ -23,25 +31,30 @@ function App() {
     };
   });
 
+  // --- Topics (persisted)
   const [topics, setTopics] = useState(() => {
     const saved = localStorage.getItem('blog_topics');
     return saved ? JSON.parse(saved) : [];
   });
-  const [selectedTopic, setSelectedTopic] = useState(() => {
-    return localStorage.getItem('blog_selected_topic') || null;
+
+  // --- Generated blogs map: { [topicString]: blogContent } (persisted)
+  const [generatedBlogs, setGeneratedBlogs] = useState(() => {
+    const saved = localStorage.getItem('blog_generated_map');
+    return saved ? JSON.parse(saved) : {};
   });
-  const [blogContent, setBlogContent] = useState(() => {
-    return localStorage.getItem('blog_content') || '';
-  });
-  const [status, setStatus] = useState({ text: 'Ready', type: 'success' });
-  const [loading, setLoading] = useState({ topics: false, blog: false });
-  const [view, setView] = useState(() => {
-    return localStorage.getItem('blog_view') || 'topics';
-  });
+
+  // --- Active blog topic + loading
+  const [selectedTopic, setSelectedTopic] = useState(null);
+  const [loadingBlog, setLoadingBlog] = useState(false);
+
+  // --- Modal
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [pendingTopic, setPendingTopic] = useState(null);
 
-  // --- Persistence Effects ---
+  // --- Status
+  const [status, setStatus] = useState({ text: 'Ready', type: 'success' });
+
+  // --- Persistence effects
   useEffect(() => {
     localStorage.setItem('blog_config', JSON.stringify(config));
   }, [config]);
@@ -51,51 +64,52 @@ function App() {
   }, [topics]);
 
   useEffect(() => {
-    if (selectedTopic) localStorage.setItem('blog_selected_topic', selectedTopic);
-    else localStorage.removeItem('blog_selected_topic');
-  }, [selectedTopic]);
+    localStorage.setItem('blog_generated_map', JSON.stringify(generatedBlogs));
+  }, [generatedBlogs]);
 
-  useEffect(() => {
-    localStorage.setItem('blog_content', blogContent);
-  }, [blogContent]);
+  // --- Handlers
 
-  useEffect(() => {
-    localStorage.setItem('blog_view', view);
-  }, [view]);
-
-  // --- Handlers ---
   const handleGenerateTopics = async () => {
-    setLoading({ ...loading, topics: true });
+    if (!config.category.trim()) return;
+    setView('loading');
     setStatus({ text: 'Researching topics...', type: 'pending' });
+    // Clear previous topics and blogs before a fresh search
     setTopics([]);
+    setGeneratedBlogs({});
 
     try {
       const data = await blogService.generateTopics(config.category);
       setTopics(data.topics);
       setStatus({ text: `Found ${data.topics.length} Topics`, type: 'success' });
+      setView('topics');
     } catch (err) {
       console.error(err);
       setStatus({ text: 'Topics Generation Failed', type: 'error' });
-    } finally {
-      setLoading({ ...loading, topics: false });
+      setView('empty');
     }
   };
 
   const handleSelectTopic = (topic) => {
+    // If blog already generated — go straight to viewer
+    if (generatedBlogs[topic]) {
+      setSelectedTopic(topic);
+      setView('blog');
+      setStatus({ text: 'Blog Ready', type: 'success' });
+      return;
+    }
+    // Otherwise open parameters modal
     setPendingTopic(topic);
     setIsModalOpen(true);
   };
 
   const handleFinalizeGeneration = async () => {
     if (!pendingTopic) return;
-    
     const topic = pendingTopic;
     setIsModalOpen(false);
     setSelectedTopic(topic);
     setView('blog');
-    setLoading({ ...loading, blog: true });
+    setLoadingBlog(true);
     setStatus({ text: 'Crafting Blog...', type: 'pending' });
-    setBlogContent('');
 
     try {
       const data = await blogService.generateBlog({
@@ -105,25 +119,33 @@ function App() {
         goal: config.goal,
         internalLinks: config.internalLinks,
       });
-      setBlogContent(data.content);
+      setGeneratedBlogs(prev => ({ ...prev, [topic]: data.content }));
       setStatus({ text: 'Blog Generated!', type: 'success' });
     } catch (err) {
       console.error(err);
       setStatus({ text: 'Blog Creation Failed', type: 'error' });
     } finally {
-      setLoading({ ...loading, blog: false });
+      setLoadingBlog(false);
     }
   };
 
+  // Regenerate: open modal for an already-generated topic
+  const handleRegenerate = () => {
+    setPendingTopic(selectedTopic);
+    setIsModalOpen(true);
+  };
+
   const copyToClipboard = () => {
-    navigator.clipboard.writeText(blogContent);
-    const oldText = status.text;
+    const content = generatedBlogs[selectedTopic] || '';
+    navigator.clipboard.writeText(content);
+    const prev = status.text;
     setStatus({ text: 'Copied!', type: 'success' });
-    setTimeout(() => setStatus({ text: oldText, type: 'success' }), 2000);
+    setTimeout(() => setStatus({ text: prev, type: 'success' }), 2000);
   };
 
   const downloadMarkdown = () => {
-    const blob = new Blob([blogContent], { type: 'text/markdown' });
+    const content = generatedBlogs[selectedTopic] || '';
+    const blob = new Blob([content], { type: 'text/markdown' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
@@ -133,43 +155,49 @@ function App() {
   };
 
   return (
-    <div className="app-container">
-      <Header status={status} />
+    <div className={`app-container ${view === 'empty' || view === 'loading' ? 'app-container--centered' : ''}`}>
+      {/* Header only shows on topics/blog views */}
+      {(view === 'topics' || view === 'blog') && <Header status={status} />}
 
-      <main className="content-grid">
-        <ConfigSidebar 
-          config={config} 
-          setConfig={setConfig} 
-          onGenerateTopics={handleGenerateTopics} 
-          loading={loading.topics} 
+      {view === 'empty' && (
+        <EmptyState
+          category={config.category}
+          onCategoryChange={val => setConfig({ ...config, category: val })}
+          onGenerate={handleGenerateTopics}
+          loading={false}
         />
+      )}
 
-        <section className="workspace">
-          {view === 'topics' ? (
-            <TopicsGrid 
-              topics={topics} 
-              onSelectTopic={handleSelectTopic} 
-            />
-          ) : (
-            <BlogViewer 
-              selectedTopic={selectedTopic} 
-              blogContent={blogContent} 
-              onBack={() => setView('topics')} 
-              loading={loading.blog} 
-              onCopy={copyToClipboard} 
-              onDownload={downloadMarkdown} 
-            />
-          )}
-        </section>
-      </main>
+      {view === 'loading' && <TopicsLoader category={config.category} />}
 
-      <ParametersModal 
-        isOpen={isModalOpen} 
-        onClose={() => setIsModalOpen(false)} 
-        pendingTopic={pendingTopic} 
-        config={config} 
-        setConfig={setConfig} 
-        onFinalize={handleFinalizeGeneration} 
+      {view === 'topics' && (
+        <TopicsGrid
+          topics={topics}
+          generatedBlogs={generatedBlogs}
+          onSelectTopic={handleSelectTopic}
+          onNewCategory={() => setView('empty')}
+        />
+      )}
+
+      {view === 'blog' && (
+        <BlogViewer
+          selectedTopic={selectedTopic}
+          blogContent={generatedBlogs[selectedTopic] || ''}
+          onBack={() => setView('topics')}
+          loading={loadingBlog}
+          onCopy={copyToClipboard}
+          onDownload={downloadMarkdown}
+          onRegenerate={handleRegenerate}
+        />
+      )}
+
+      <ParametersModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        pendingTopic={pendingTopic}
+        config={config}
+        setConfig={setConfig}
+        onFinalize={handleFinalizeGeneration}
       />
     </div>
   );
