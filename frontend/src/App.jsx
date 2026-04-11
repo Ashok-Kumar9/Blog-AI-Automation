@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import ReactMarkdown from 'react-markdown';
-import { Sparkles, ArrowLeft, Copy, Download, Loader2, CheckCircle2, AlertCircle, Layout, BookOpen, Settings, X } from 'lucide-react';
+import { Sparkles, ArrowLeft, Copy, Download, Loader2, CheckCircle2, AlertCircle, Layout, BookOpen, Settings, X, Link as LinkIcon, Plus, Trash2 } from 'lucide-react';
 import './App.css';
 
 const API_BASE = 'http://127.0.0.1:8000';
@@ -9,14 +9,17 @@ function App() {
   // --- State ---
   const [config, setConfig] = useState(() => {
     const saved = localStorage.getItem('blog_config');
-    return saved ? JSON.parse(saved) : {
-      category: '',
-      audience: '',
-      wordCount: 2500,
-      goal: '',
-      internalLinks: [],
+    const parsed = saved ? JSON.parse(saved) : {};
+    return {
+      category: parsed.category || '',
+      audience: parsed.audience || '',
+      wordCount: parsed.wordCount || 2500,
+      goal: parsed.goal || '',
+      internalLinks: parsed.internalLinks || [],
     };
   });
+
+  const [newLink, setNewLink] = useState({ product_keyword: '', url: '', integration_count: 1 });
   const [topics, setTopics] = useState(() => {
     const saved = localStorage.getItem('blog_topics');
     return saved ? JSON.parse(saved) : [];
@@ -123,6 +126,20 @@ function App() {
     } finally {
       setLoading({ ...loading, blog: false });
     }
+  };
+
+  const addInternalLink = () => {
+    if (!newLink.product_keyword || !newLink.url) return;
+    setConfig({
+      ...config,
+      internalLinks: [...config.internalLinks, { ...newLink }]
+    });
+    setNewLink({ product_keyword: '', url: '', integration_count: 1 });
+  };
+
+  const removeInternalLink = (index) => {
+    const updatedLinks = config.internalLinks.filter((_, i) => i !== index);
+    setConfig({ ...config, internalLinks: updatedLinks });
   };
 
   const copyToClipboard = () => {
@@ -293,6 +310,48 @@ function App() {
                   value={config.goal}
                   onChange={e => setConfig({ ...config, goal: e.target.value })}
                 />
+              </div>
+
+              <div className="internal-links-section">
+                <label><LinkIcon size={14} style={{ marginRight: '6px' }} /> Internal Linking Strategy</label>
+                
+                <div className="links-list">
+                  {config.internalLinks?.map((link, index) => (
+                    <div key={index} className="link-item">
+                      <div className="link-info">
+                        <span className="link-keyword">{link.product_keyword}</span>
+                        <span className="link-url">{link.url}</span>
+                        <span className="link-count">×{link.integration_count}</span>
+                      </div>
+                      <button className="remove-link-btn" onClick={() => removeInternalLink(index)}>
+                        <Trash2 size={14} />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="add-link-form">
+                  <input
+                    type="text"
+                    placeholder="Keyword"
+                    value={newLink.product_keyword}
+                    onChange={e => setNewLink({ ...newLink, product_keyword: e.target.value })}
+                  />
+                  <input
+                    type="text"
+                    placeholder="URL"
+                    value={newLink.url}
+                    onChange={e => setNewLink({ ...newLink, url: e.target.value })}
+                  />
+                  <input
+                    type="number"
+                    value={newLink.integration_count}
+                    onChange={e => setNewLink({ ...newLink, integration_count: parseInt(e.target.value) || 1 })}
+                  />
+                  <button className="add-btn" onClick={addInternalLink}>
+                    <Plus size={18} />
+                  </button>
+                </div>
               </div>
             </div>
 

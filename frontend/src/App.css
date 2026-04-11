@@ -537,3 +537,111 @@ input::placeholder, textarea::placeholder {
     padding: 2rem !important;
   }
 }
+
+/* Internal Links Section in Modal */
+.internal-links-section {
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px dashed var(--border-color);
+}
+
+.links-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin: 1rem 0;
+  max-height: 200px;
+  overflow-y: auto;
+  padding-right: 0.5rem;
+}
+
+.link-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  background: white;
+  border-radius: 0.75rem;
+  border: 1px solid var(--border-color);
+  font-size: 0.85rem;
+  animation: fadeIn 0.3s ease-out;
+}
+
+.link-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  overflow: hidden;
+}
+
+.link-keyword {
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.link-url {
+  color: var(--text-tertiary);
+  font-size: 0.75rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 300px;
+}
+
+.link-count {
+  font-weight: 800;
+  color: var(--primary-color);
+  background: var(--primary-glow);
+  padding: 0.1rem 0.4rem;
+  border-radius: 4px;
+  font-size: 0.7rem;
+  width: fit-content;
+}
+
+.remove-link-btn {
+  background: none;
+  border: none;
+  color: var(--text-tertiary);
+  cursor: pointer;
+  padding: 0.4rem;
+  border-radius: 50%;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.remove-link-btn:hover {
+  background: #fef2f2;
+  color: var(--error-color);
+}
+
+.add-link-form {
+  display: grid;
+  grid-template-columns: 1fr 2fr 60px 48px;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.add-link-form input {
+  padding: 0.6rem 0.8rem;
+  font-size: 0.85rem;
+  border-radius: 0.75rem;
+}
+
+.add-btn {
+  background: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: 0.75rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.add-btn:hover {
+  background: var(--primary-hover);
+  transform: scale(1.05);
+}
