@@ -37,7 +37,6 @@ async def get_defaults():
     """Returns default values for the frontend to pre-fill forms."""
     return {
         "category": settings.DEFAULT_BLOG_CATEGORY,
-        "competitors": settings.DEFAULT_COMPETITORS,
         "audience": settings.DEFAULT_TARGET_AUDIENCE,
         "word_count": settings.DEFAULT_WORD_COUNT_GOAL,
         "goal": settings.DEFAULT_SPECIFIC_GOAL,

@@ -7,43 +7,78 @@ const API_BASE = 'http://127.0.0.1:8000';
 
 function App() {
   // --- State ---
-  const [config, setConfig] = useState({
-    category: '',
-    competitors: '',
-    audience: '',
-    wordCount: 2500,
-    goal: '',
+  const [config, setConfig] = useState(() => {
+    const saved = localStorage.getItem('blog_config');
+    return saved ? JSON.parse(saved) : {
+      category: '',
+      audience: '',
+      wordCount: 2500,
+      goal: '',
+    };
   });
-  const [topics, setTopics] = useState([]);
-  const [selectedTopic, setSelectedTopic] = useState(null);
-  const [blogContent, setBlogContent] = useState('');
+  const [topics, setTopics] = useState(() => {
+    const saved = localStorage.getItem('blog_topics');
+    return saved ? JSON.parse(saved) : [];
+  });
+  const [selectedTopic, setSelectedTopic] = useState(() => {
+    return localStorage.getItem('blog_selected_topic') || null;
+  });
+  const [blogContent, setBlogContent] = useState(() => {
+    return localStorage.getItem('blog_content') || '';
+  });
   const [status, setStatus] = useState({ text: 'Ready', type: 'success' });
   const [loading, setLoading] = useState({ topics: false, blog: false });
-  const [view, setView] = useState('topics'); // 'topics' or 'blog'
+  const [view, setView] = useState(() => {
+    return localStorage.getItem('blog_view') || 'topics';
+  });
+
+  // --- Persistence Effects ---
+  useEffect(() => {
+    localStorage.setItem('blog_config', JSON.stringify(config));
+  }, [config]);
+
+  useEffect(() => {
+    localStorage.setItem('blog_topics', JSON.stringify(topics));
+  }, [topics]);
+
+  useEffect(() => {
+    if (selectedTopic) localStorage.setItem('blog_selected_topic', selectedTopic);
+    else localStorage.removeItem('blog_selected_topic');
+  }, [selectedTopic]);
+
+  useEffect(() => {
+    localStorage.setItem('blog_content', blogContent);
+  }, [blogContent]);
+
+  useEffect(() => {
+    localStorage.setItem('blog_view', view);
+  }, [view]);
 
   // --- Effects: Load Defaults ---
   useEffect(() => {
-    fetch(`${API_BASE}/api/defaults`)
-      .then(res => res.json())
-      .then(data => {
-        setConfig({
-          category: data.category,
-          competitors: data.competitors.join(', '),
-          audience: data.audience,
-          wordCount: data.word_count,
-          goal: data.goal,
+    const hasStoredConfig = localStorage.getItem('blog_config');
+    if (!hasStoredConfig) {
+      fetch(`${API_BASE}/api/defaults`)
+        .then(res => res.json())
+        .then(data => {
+          setConfig({
+            category: data.category,
+            audience: data.audience,
+            wordCount: data.word_count,
+            goal: data.goal,
+          });
+        })
+        .catch(err => {
+          console.error('Failed to fetch defaults:', err);
+          setStatus({ text: 'API Sync Offline', type: 'error' });
         });
-      })
-      .catch(err => {
-        console.error('Failed to fetch defaults:', err);
-        setStatus({ text: 'API Sync Offline', type: 'error' });
-      });
+    }
   }, []);
 
   // --- Handlers ---
   const handleGenerateTopics = async () => {
     setLoading({ ...loading, topics: true });
-    setStatus({ text: 'Scanning competitors...', type: 'pending' });
+    setStatus({ text: 'Researching topics...', type: 'pending' });
     setTopics([]);
 
     try {
@@ -51,8 +86,7 @@ function App() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          category: config.category,
-          competitors: config.competitors.split(',').map(c => c.trim()).filter(c => c)
+          category: config.category
         }),
       });
       if (!resp.ok) throw new Error('Generation failed');
@@ -143,15 +177,6 @@ function App() {
                 placeholder="e.g. MSME Loan"
                 value={config.category}
                 onChange={e => setConfig({ ...config, category: e.target.value })}
-              />
-            </div>
-            <div className="input-group">
-              <label>Competitors</label>
-              <textarea
-                rows="3"
-                placeholder="Competitor names, comma separated"
-                value={config.competitors}
-                onChange={e => setConfig({ ...config, competitors: e.target.value })}
               />
             </div>
             <button

@@ -14,8 +14,6 @@ class Settings:
     
     # Default Topics Generation
     DEFAULT_BLOG_CATEGORY: str = "MSME Loan"
-    DEFAULT_COMPETITORS: List[str] = ["Bajaj Finserv", "Lendingkart", "Tata Capital"]
-    
     # Default Blog Generation
     DEFAULT_TARGET_AUDIENCE: str = "Small business owners and entrepreneurs in Tier 2 and Tier 3 cities"
     DEFAULT_WORD_COUNT_GOAL: int = 2500

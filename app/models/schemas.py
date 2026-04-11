@@ -4,7 +4,6 @@ from app.core.config import settings
 
 class TopicRequest(BaseModel):
     category: str = Field(default=settings.DEFAULT_BLOG_CATEGORY)
-    competitors: List[str] = Field(default=settings.DEFAULT_COMPETITORS)
 
 class BlogRequest(BaseModel):
     topic: str
