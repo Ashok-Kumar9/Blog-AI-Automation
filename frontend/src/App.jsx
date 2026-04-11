@@ -206,7 +206,7 @@ function App() {
           {view === 'topics' ? (
             <div className="topics-view">
               <h2>Available Topics</h2>
-              <p className="subtitle" style={{ color: 'var(--text-secondary)', marginBottom: '2.5rem', fontSize: '1rem' }}>
+              <p className="subtitle" style={{ color: 'var(--text-secondary)', marginBottom: '1rem', fontSize: '0.9rem' }}>
                 Select a trending topic to generate a high-quality, SEO-optimized blog post for Credit Saison India.
               </p>
 
@@ -217,15 +217,15 @@ function App() {
                       Topic #{i + 1}
                     </div>
                     <h4>{topic}</h4>
-                    <div className="card-footer" style={{ marginTop: 'auto', paddingTop: '1.5rem', borderTop: '1px solid var(--border-color)', fontSize: '0.85rem', fontWeight: '700', color: 'var(--primary-color)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                    <div className="card-footer" style={{ marginTop: 'auto', paddingTop: '1rem', borderTop: '1px solid var(--border-color)', fontSize: '0.85rem', fontWeight: '700', color: 'var(--primary-color)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                       Generate Post <Sparkles size={16} />
                     </div>
                   </div>
                 )) : (
-                  <div className="empty-state" style={{ padding: '8rem 2rem', textAlign: 'center', gridColumn: '1/-1', background: 'white', borderRadius: 'var(--border-radius)', border: '2px dashed var(--border-color)', boxShadow: 'var(--shadow-lg)' }}>
-                    <div style={{ fontSize: '4rem', marginBottom: '1.5rem' }}>✨</div>
+                  <div className="empty-state" style={{ padding: '4rem 2rem', textAlign: 'center', gridColumn: '1/-1', background: 'white', borderRadius: 'var(--border-radius)', border: '2px dashed var(--border-color)', boxShadow: 'var(--shadow-lg)' }}>
+                    <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>✨</div>
                     <h3 style={{ marginBottom: '0.5rem', justifyContent: 'center' }}>No Topics Generated Yet</h3>
-                    <p style={{ color: 'var(--text-secondary)', fontSize: '0.95rem' }}>Configure your settings in the sidebar and click "Generate Trending Topics" to start.</p>
+                    <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>Configure your settings in the sidebar and click "Generate Trending Topics" to start.</p>
                   </div>
                 )}
               </div>
@@ -239,12 +239,12 @@ function App() {
                 <ArrowLeft size={18} /> Back to Topics
               </button>
 
-              <div className="blog-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', gap: '2rem', margin: '2rem 0 3rem' }}>
+              <div className="blog-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', gap: '2rem', margin: '1.5rem 0 2rem' }}>
                 <div style={{ flex: 1 }}>
-                  <div className="topic-tag" style={{ marginBottom: '1rem' }}>Selected Topic</div>
+                  <div className="topic-tag" style={{ marginBottom: '0.75rem' }}>Selected Topic</div>
                   <h2 style={{ margin: 0 }}>{selectedTopic}</h2>
                 </div>
-                <div style={{ display: 'flex', gap: '1rem', paddingBottom: '0.5rem' }}>
+                <div style={{ display: 'flex', gap: '0.75rem', paddingBottom: '0.5rem' }}>
                   <button className="secondary-btn" onClick={copyToClipboard}><Copy size={18} /> Copy</button>
                   <button className="secondary-btn" onClick={downloadMarkdown}><Download size={18} /> .md</button>
                 </div>
@@ -252,10 +252,10 @@ function App() {
 
               <div className="blog-content-wrapper card">
                 {loading.blog ? (
-                  <div className="loading-state" style={{ textAlign: 'center', padding: '8rem 2rem' }}>
-                    <Loader2 className="spinner-large" style={{ margin: '0 auto 3rem' }} size={64} />
-                    <h3 style={{ fontSize: '2rem', justifyContent: 'center' }}>Crafting your professional blog...</h3>
-                    <p style={{ color: 'var(--text-secondary)', fontSize: '1.25rem', marginTop: '1rem' }}>Our AI is researching and writing deep, expert-level content for you.</p>
+                  <div className="loading-state" style={{ textAlign: 'center', padding: '4rem 2rem' }}>
+                    <Loader2 className="spinner-large" style={{ margin: '0 auto 2rem' }} size={48} />
+                    <h3 style={{ fontSize: '1.5rem', justifyContent: 'center' }}>Crafting your professional blog...</h3>
+                    <p style={{ color: 'var(--text-secondary)', fontSize: '1rem', marginTop: '0.75rem' }}>Our AI is researching and writing deep, expert-level content for you.</p>
                   </div>
                 ) : (
                   <div className="markdown-body">
