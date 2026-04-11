@@ -1,9 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import ReactMarkdown from 'react-markdown';
-import { Sparkles, ArrowLeft, Copy, Download, Loader2, CheckCircle2, AlertCircle, Layout, BookOpen, Settings, X, Link as LinkIcon, Plus, Trash2 } from 'lucide-react';
+import { blogService } from './services/blogService';
 import './App.css';
 
-import { blogService } from './services/blogService';
+// Components
+import Header from './components/Header';
+import ConfigSidebar from './components/ConfigSidebar';
+import TopicsGrid from './components/TopicsGrid';
+import BlogViewer from './components/BlogViewer';
+import ParametersModal from './components/ParametersModal';
 
 function App() {
   // --- State ---
@@ -19,7 +23,6 @@ function App() {
     };
   });
 
-  const [newLink, setNewLink] = useState({ product_keyword: '', url: '', integration_count: 1 });
   const [topics, setTopics] = useState(() => {
     const saved = localStorage.getItem('blog_topics');
     return saved ? JSON.parse(saved) : [];
@@ -59,8 +62,6 @@ function App() {
   useEffect(() => {
     localStorage.setItem('blog_view', view);
   }, [view]);
-
-
 
   // --- Handlers ---
   const handleGenerateTopics = async () => {
@@ -114,20 +115,6 @@ function App() {
     }
   };
 
-  const addInternalLink = () => {
-    if (!newLink.product_keyword || !newLink.url) return;
-    setConfig({
-      ...config,
-      internalLinks: [...config.internalLinks, { ...newLink }]
-    });
-    setNewLink({ product_keyword: '', url: '', integration_count: 1 });
-  };
-
-  const removeInternalLink = (index) => {
-    const updatedLinks = config.internalLinks.filter((_, i) => i !== index);
-    setConfig({ ...config, internalLinks: updatedLinks });
-  };
-
   const copyToClipboard = () => {
     navigator.clipboard.writeText(blogContent);
     const oldText = status.text;
@@ -145,213 +132,45 @@ function App() {
     URL.revokeObjectURL(url);
   };
 
-  // --- Render Helpers ---
-  const renderStatusIcon = () => {
-    if (status.type === 'pending') return <Loader2 className="spinner" size={16} color="var(--warning-color)" />;
-    if (status.type === 'error') return <AlertCircle color="var(--error-color)" size={16} />;
-    return <CheckCircle2 color="var(--success-color)" size={16} />;
-  };
-
   return (
     <div className="app-container">
-      <header className="main-header">
-        <div className="brand-name">Blog Automation <span className="accent">AI</span></div>
-        <div className="status-badge">
-          {renderStatusIcon()}
-          <span>{status.text}</span>
-        </div>
-      </header>
+      <Header status={status} />
 
       <main className="content-grid">
-        {/* Sidebar */}
-        <aside className="config-sidebar">
-          <div className="card">
-            <h3><Settings size={20} /> Generation Settings</h3>
-            <div className="input-group">
-              <label>Blog Category</label>
-              <input
-                type="text"
-                placeholder="e.g. MSME Loan"
-                value={config.category}
-                onChange={e => setConfig({ ...config, category: e.target.value })}
-              />
-            </div>
-            <button
-              className="primary-btn"
-              onClick={handleGenerateTopics}
-              disabled={loading.topics}
-            >
-              {loading.topics ? <Loader2 className="spinner" /> : <Sparkles size={18} />}
-              Generate Trending Topics
-            </button>
-          </div>
-        </aside>
+        <ConfigSidebar 
+          config={config} 
+          setConfig={setConfig} 
+          onGenerateTopics={handleGenerateTopics} 
+          loading={loading.topics} 
+        />
 
-        {/* Workspace */}
         <section className="workspace">
           {view === 'topics' ? (
-            <div className="topics-view">
-              <h2>Available Topics</h2>
-              <p className="subtitle" style={{ color: 'var(--text-secondary)', marginBottom: '1rem', fontSize: '0.9rem' }}>
-                Select a trending topic to generate a high-quality, SEO-optimized blog post for Credit Saison India.
-              </p>
-
-              <div className="topic-grid">
-                {topics.length > 0 ? topics.map((topic, i) => (
-                  <div key={i} className="topic-card" onClick={() => handleSelectTopic(topic)}>
-                    <div className="topic-tag">
-                      Topic #{i + 1}
-                    </div>
-                    <h4>{topic}</h4>
-                    <div className="card-footer" style={{ marginTop: 'auto', paddingTop: '1rem', borderTop: '1px solid var(--border-color)', fontSize: '0.85rem', fontWeight: '700', color: 'var(--primary-color)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                      Generate Post <Sparkles size={16} />
-                    </div>
-                  </div>
-                )) : (
-                  <div className="empty-state" style={{ padding: '4rem 2rem', textAlign: 'center', gridColumn: '1/-1', background: 'white', borderRadius: 'var(--border-radius)', border: '2px dashed var(--border-color)', boxShadow: 'var(--shadow-lg)' }}>
-                    <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>✨</div>
-                    <h3 style={{ marginBottom: '0.5rem', justifyContent: 'center' }}>No Topics Generated Yet</h3>
-                    <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>Configure your settings in the sidebar and click "Generate Trending Topics" to start.</p>
-                  </div>
-                )}
-              </div>
-            </div>
+            <TopicsGrid 
+              topics={topics} 
+              onSelectTopic={handleSelectTopic} 
+            />
           ) : (
-            <div className="blog-view">
-              <button
-                className="btn-back"
-                onClick={() => setView('topics')}
-              >
-                <ArrowLeft size={18} /> Back to Topics
-              </button>
-
-              <div className="blog-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', gap: '2rem', margin: '1.5rem 0 2rem' }}>
-                <div style={{ flex: 1 }}>
-                  <div className="topic-tag" style={{ marginBottom: '0.75rem' }}>Selected Topic</div>
-                  <h2 style={{ margin: 0 }}>{selectedTopic}</h2>
-                </div>
-                <div style={{ display: 'flex', gap: '0.75rem', paddingBottom: '0.5rem' }}>
-                  <button className="secondary-btn" onClick={copyToClipboard}><Copy size={18} /> Copy</button>
-                  <button className="secondary-btn" onClick={downloadMarkdown}><Download size={18} /> .md</button>
-                </div>
-              </div>
-
-              <div className="blog-content-wrapper card">
-                {loading.blog ? (
-                  <div className="loading-state" style={{ textAlign: 'center', padding: '4rem 2rem' }}>
-                    <Loader2 className="spinner-large" style={{ margin: '0 auto 2rem' }} size={48} />
-                    <h3 style={{ fontSize: '1.5rem', justifyContent: 'center' }}>Crafting your professional blog...</h3>
-                    <p style={{ color: 'var(--text-secondary)', fontSize: '1rem', marginTop: '0.75rem' }}>Our AI is researching and writing deep, expert-level content for you.</p>
-                  </div>
-                ) : (
-                  <div className="markdown-body">
-                    <ReactMarkdown>{blogContent}</ReactMarkdown>
-                  </div>
-                )}
-              </div>
-            </div>
+            <BlogViewer 
+              selectedTopic={selectedTopic} 
+              blogContent={blogContent} 
+              onBack={() => setView('topics')} 
+              loading={loading.blog} 
+              onCopy={copyToClipboard} 
+              onDownload={downloadMarkdown} 
+            />
           )}
         </section>
       </main>
 
-      {/* Blog Parameters Modal */}
-      {isModalOpen && (
-        <div className="modal-overlay">
-          <div className="modal-content card">
-            <button className="modal-close" onClick={() => setIsModalOpen(false)}>
-              <X size={24} />
-            </button>
-            <div className="modal-header">
-              <h3><Layout size={24} /> Blog Parameters</h3>
-              <p>Configure the specifics for: <strong>{pendingTopic}</strong></p>
-            </div>
-            
-            <div className="modal-body">
-              <div className="input-group">
-                <label>Target Audience</label>
-                <input
-                  type="text"
-                  placeholder="e.g. Entrepreneurs in India"
-                  value={config.audience}
-                  onChange={e => setConfig({ ...config, audience: e.target.value })}
-                />
-              </div>
-              
-              <div className="input-row">
-                <div className="input-group">
-                  <label>Word Count Goal</label>
-                  <input
-                    type="number"
-                    value={config.wordCount}
-                    onChange={e => setConfig({ ...config, wordCount: parseInt(e.target.value) || 0 })}
-                  />
-                </div>
-              </div>
-
-              <div className="input-group">
-                <label>Specific Goal</label>
-                <textarea
-                  rows="3"
-                  placeholder="What should this blog achieve? (e.g. Brand awareness, Lead generation)"
-                  value={config.goal}
-                  onChange={e => setConfig({ ...config, goal: e.target.value })}
-                />
-              </div>
-
-              <div className="internal-links-section">
-                <label><LinkIcon size={14} style={{ marginRight: '6px' }} /> Internal Linking Strategy</label>
-                
-                <div className="links-list">
-                  {config.internalLinks?.map((link, index) => (
-                    <div key={index} className="link-item">
-                      <div className="link-info">
-                        <span className="link-keyword">{link.product_keyword}</span>
-                        <span className="link-url">{link.url}</span>
-                        <span className="link-count">×{link.integration_count}</span>
-                      </div>
-                      <button className="remove-link-btn" onClick={() => removeInternalLink(index)}>
-                        <Trash2 size={14} />
-                      </button>
-                    </div>
-                  ))}
-                </div>
-
-                <div className="add-link-form">
-                  <input
-                    type="text"
-                    placeholder="Keyword"
-                    value={newLink.product_keyword}
-                    onChange={e => setNewLink({ ...newLink, product_keyword: e.target.value })}
-                  />
-                  <input
-                    type="text"
-                    placeholder="URL"
-                    value={newLink.url}
-                    onChange={e => setNewLink({ ...newLink, url: e.target.value })}
-                  />
-                  <input
-                    type="number"
-                    value={newLink.integration_count}
-                    onChange={e => setNewLink({ ...newLink, integration_count: parseInt(e.target.value) || 1 })}
-                  />
-                  <button className="add-btn" onClick={addInternalLink}>
-                    <Plus size={18} />
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            <div className="modal-footer">
-              <button 
-                className="primary-btn" 
-                onClick={handleFinalizeGeneration}
-              >
-                <Sparkles size={18} /> Generate Full Blog Post
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      <ParametersModal 
+        isOpen={isModalOpen} 
+        onClose={() => setIsModalOpen(false)} 
+        pendingTopic={pendingTopic} 
+        config={config} 
+        setConfig={setConfig} 
+        onFinalize={handleFinalizeGeneration} 
+      />
     </div>
   );
 }
