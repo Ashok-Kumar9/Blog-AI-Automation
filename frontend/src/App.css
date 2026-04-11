@@ -88,8 +88,8 @@ h4 {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 3rem;
-  padding: 1.5rem 0 1.5rem 0;
+  margin-bottom: 1rem;
+  padding: 1rem 1.5rem;
   border-bottom: 1px solid var(--border-color);
   background: transparent;
 }
@@ -257,7 +257,7 @@ textarea::placeholder {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
 }
 
 .secondary-btn:hover {
@@ -307,7 +307,8 @@ textarea::placeholder {
 .topic-icon-box {
   width: 44px;
   height: 44px;
-  background: #f4f8ff; /* Light bluish tint */
+  background: #f4f8ff;
+  /* Light bluish tint */
   color: var(--primary-color);
   border-radius: 0.6rem;
   display: flex;
@@ -321,8 +322,10 @@ textarea::placeholder {
   line-height: 1.4;
   margin: 0;
   color: var(--text-primary);
-  margin-bottom: auto; /* Push footer down */
-  padding-bottom: 1.5rem; /* Space between title and footer */
+  margin-bottom: auto;
+  /* Push footer down */
+  padding-bottom: 1.5rem;
+  /* Space between title and footer */
 }
 
 /* Footer layout inside topic card */
@@ -333,7 +336,8 @@ textarea::placeholder {
 .generate-post-btn {
   background: white;
   color: var(--primary-color);
-  border: 1px solid rgba(11, 87, 208, 0.3); /* Subtle blue border */
+  border: 1px solid rgba(11, 87, 208, 0.3);
+  /* Subtle blue border */
   width: 100%;
   padding: 0.75rem;
   border-radius: 0.5rem;
@@ -405,7 +409,7 @@ textarea::placeholder {
   align-items: center;
   gap: 0.5rem;
   cursor: pointer;
-  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
   transition: all 0.2s ease;
 }
 
@@ -428,7 +432,7 @@ textarea::placeholder {
   background: white;
   border-radius: 1rem;
   min-height: 800px;
-  box-shadow: 0 20px 40px -10px rgba(0,0,0,0.05), 0 1px 3px rgba(0,0,0,0.03);
+  box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.05), 0 1px 3px rgba(0, 0, 0, 0.03);
   margin-bottom: 4rem;
   position: relative;
   border: 1px solid var(--border-color);
@@ -546,7 +550,7 @@ textarea::placeholder {
   position: relative;
   background: #ffffff;
   border-radius: 0.75rem;
-  box-shadow: 0 24px 64px -12px rgba(0, 0, 0, 0.18), 0 0 0 1px rgba(0,0,0,0.05);
+  box-shadow: 0 24px 64px -12px rgba(0, 0, 0, 0.18), 0 0 0 1px rgba(0, 0, 0, 0.05);
   padding: 2rem;
   animation: modalSlideUp 0.3s cubic-bezier(0.22, 1, 0.36, 1);
 }
@@ -615,13 +619,25 @@ textarea::placeholder {
 }
 
 @keyframes modalFadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
 }
 
 @keyframes modalSlideUp {
-  from { opacity: 0; transform: translateY(20px) scale(0.97); }
-  to { opacity: 1; transform: translateY(0) scale(1); }
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.97);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 }
 
 @media (max-width: 640px) {
@@ -1093,7 +1109,7 @@ textarea::placeholder {
   cursor: pointer;
   white-space: nowrap;
   transition: all 0.2s ease;
-  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
 }
 
 .new-category-btn:hover {
@@ -1478,7 +1494,7 @@ textarea::placeholder {
   align-items: center;
   gap: 0.5rem;
   font-size: 0.85rem;
-  box-shadow: 0 1px 2px rgba(0,0,0,0.02);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
 }
 
 .pill-keyword {
@@ -1591,35 +1607,49 @@ textarea::placeholder {
 }
 
 @keyframes pulse-dot {
-  0% { opacity: 0.5; }
-  50% { opacity: 1; }
-  100% { opacity: 0.5; }
+  0% {
+    opacity: 0.5;
+  }
+
+  50% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0.5;
+  }
 }
 
 @media (max-width: 768px) {
   .modal-fullscreen-content {
     padding: 2rem 1.5rem;
   }
+
   .form-row-2col {
     grid-template-columns: 1fr;
     gap: 1.5rem;
   }
+
   .add-link-form-fullscreen {
     flex-wrap: wrap;
   }
+
   .count-col {
     flex: 1;
   }
+
   .btn-col {
     flex: 0 0 auto;
     width: 100%;
   }
+
   .fullscreen-footer {
     flex-direction: column;
     gap: 1.5rem;
     align-items: stretch;
     text-align: center;
   }
+
   .footer-status {
     justify-content: center;
   }

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Sparkles, CheckCircle2, Search, Tag, Briefcase, TrendingUp, Lightbulb, Target, Monitor, Rocket } from 'lucide-react';
+import { Sparkles, CheckCircle2, Search, Briefcase, TrendingUp, Lightbulb, Target, Monitor, Rocket } from 'lucide-react';
 
 const TOPIC_ICONS = [Briefcase, TrendingUp, Lightbulb, Target, Monitor, Rocket];
 
