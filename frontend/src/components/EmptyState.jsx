@@ -28,6 +28,7 @@ const EmptyState = ({ category, onCategoryChange, onGenerate, loading }) => {
             value={category}
             onChange={e => onCategoryChange(e.target.value)}
             onKeyDown={handleKeyDown}
+            autoComplete="off"
             autoFocus
           />
         </div>

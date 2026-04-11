@@ -175,7 +175,11 @@ function App() {
           topics={topics}
           generatedBlogs={generatedBlogs}
           onSelectTopic={handleSelectTopic}
-          onNewCategory={() => setView('empty')}
+          onNewCategory={() => {
+            setConfig(prev => ({ ...prev, category: '' }));
+            setView('empty');
+          }}
+          category={config.category}
         />
       )}
 

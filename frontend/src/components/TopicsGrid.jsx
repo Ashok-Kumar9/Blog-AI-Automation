@@ -1,18 +1,20 @@
 import React from 'react';
-import { Sparkles, CheckCircle2, RefreshCw } from 'lucide-react';
+import { Sparkles, CheckCircle2, RefreshCw, Tag } from 'lucide-react';
 
-const TopicsGrid = ({ topics, generatedBlogs, onSelectTopic, onNewCategory }) => {
+const TopicsGrid = ({ topics, generatedBlogs, onSelectTopic, onNewCategory, category }) => {
   return (
     <div className="topics-page">
       <div className="topics-page-header">
         <div>
+          {category && (
+            <div className="topics-category-badge">
+              <Tag size={12} /> {category}
+            </div>
+          )}
           <h2 className="topics-heading">Trending Topics</h2>
-          <p className="topics-subheading">
-            {topics.length} topics found — click any to generate a full blog post
-          </p>
         </div>
         <button className="new-category-btn" onClick={onNewCategory}>
-          <RefreshCw size={16} />
+          <RefreshCw size={15} />
           Explore New Category
         </button>
       </div>

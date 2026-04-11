@@ -23,15 +23,15 @@ const ParametersModal = ({ isOpen, onClose, pendingTopic, config, setConfig, onF
 
   return (
     <div className="modal-overlay" onClick={onClose}>
-      <div className="modal-content card" onClick={e => e.stopPropagation()}>
-        <button className="modal-close" onClick={onClose}><X size={20} /></button>
+      <div className="modal-content" onClick={e => e.stopPropagation()}>
+        <button className="modal-close" onClick={onClose}><X size={18} /></button>
 
         <div className="modal-header">
           <div className="modal-topic-badge">
-            <FileText size={14} /> {pendingTopic}
+            <FileText size={13} /> {pendingTopic}
           </div>
           <h3>Configure Blog Parameters</h3>
-          <p>Tailor the output to match your brand and goals</p>
+          <p>Tailor the output — audience, length and goals</p>
         </div>
 
         <div className="modal-body">
