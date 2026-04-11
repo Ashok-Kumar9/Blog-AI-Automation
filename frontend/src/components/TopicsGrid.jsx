@@ -35,18 +35,18 @@ const TopicsGrid = ({ topics, generatedBlogs, onSelectTopic, onNewCategory, cate
                   <CheckCircle2 size={12} /> Blog Ready
                 </div>
               )}
-              
+
               <div className="topic-icon-box">
                 <Icon size={20} />
               </div>
-              
+
               <h4>{topic}</h4>
-              
+
               <div className="topic-card-footer">
                 <div className="ai-optimized-label">
                   <Sparkles size={14} /> AI Optimized
                 </div>
-                <button 
+                <button
                   className={`generate-post-btn ${hasBlog ? 'btn-view' : ''}`}
                   onClick={(e) => {
                     e.stopPropagation();
