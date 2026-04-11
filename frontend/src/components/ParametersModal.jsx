@@ -21,6 +21,12 @@ const ParametersModal = ({ isOpen, onClose, pendingTopic, config, setConfig, onF
     setConfig({ ...config, internalLinks: updatedLinks });
   };
 
+  const isFormValid = 
+    config.audience?.trim() && 
+    config.wordCount > 0 && 
+    config.goal?.trim() && 
+    config.internalLinks?.length > 0;
+
   return (
     <div className="modal-fullscreen-overlay">
       <div className="modal-fullscreen-content">
@@ -128,10 +134,14 @@ const ParametersModal = ({ isOpen, onClose, pendingTopic, config, setConfig, onF
 
         <div className="fullscreen-footer">
           <div className="footer-status">
-            <div className="status-dot"></div>
-            <span>AI Content Engine Ready</span>
+            <div className={`status-dot ${!isFormValid ? 'dot-waiting' : ''}`}></div>
+            <span>{isFormValid ? "AI Content Engine Ready" : "Please fill all fields and add at least 1 internal link."}</span>
           </div>
-          <button className="generate-fullscreen-btn" onClick={onFinalize}>
+          <button 
+            className={`generate-fullscreen-btn ${!isFormValid ? 'btn-disabled' : ''}`} 
+            onClick={onFinalize}
+            disabled={!isFormValid}
+          >
             Generate Blog Post <Sparkles size={18} />
           </button>
         </div>

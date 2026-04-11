@@ -29,6 +29,7 @@ const TopicsGrid = ({ topics, generatedBlogs, onSelectTopic, onNewCategory, cate
             <div
               key={i}
               className={`topic-card ${hasBlog ? 'topic-card--done' : ''}`}
+              onClick={() => onSelectTopic(topic)}
             >
               {hasBlog && (
                 <div className="blog-ready-badge">
@@ -43,9 +44,6 @@ const TopicsGrid = ({ topics, generatedBlogs, onSelectTopic, onNewCategory, cate
               <h4>{topic}</h4>
 
               <div className="topic-card-footer">
-                <div className="ai-optimized-label">
-                  <Sparkles size={14} /> AI Optimized
-                </div>
                 <button
                   className={`generate-post-btn ${hasBlog ? 'btn-view' : ''}`}
                   onClick={(e) => {

@@ -326,40 +326,40 @@ textarea::placeholder {
 
 /* Footer layout inside topic card */
 .topic-card-footer {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.ai-optimized-label {
-  display: flex;
-  align-items: center;
-  gap: 0.35rem;
-  font-size: 0.85rem;
-  font-weight: 700;
-  color: #007a5a;
+  margin-top: 1rem;
 }
 
 .generate-post-btn {
-  background: var(--primary-color);
-  color: white;
-  border: none;
-  padding: 0.6rem 1rem;
-  border-radius: 0.35rem;
-  font-weight: 600;
-  font-size: 0.85rem;
+  background: white;
+  color: var(--primary-color);
+  border: 1px solid rgba(11, 87, 208, 0.3); /* Subtle blue border */
+  width: 100%;
+  padding: 0.75rem;
+  border-radius: 0.5rem;
+  font-weight: 700;
+  font-size: 0.9rem;
   cursor: pointer;
   transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .generate-post-btn:hover {
-  background: var(--primary-hover);
+  background: var(--primary-glow);
+  border-color: var(--primary-color);
+  transform: translateY(-1px);
 }
 
 .generate-post-btn.btn-view {
-  background: white;
-  color: var(--primary-color);
-  border: 1px solid var(--border-color);
+  background: #e1f4ef;
+  color: #007a5a;
+  border: 1px solid rgba(0, 122, 90, 0.2);
+}
+
+.generate-post-btn.btn-view:hover {
+  background: #d1f0e6;
+  border-color: #007a5a;
 }
 
 
@@ -1554,6 +1554,30 @@ textarea::placeholder {
   background: var(--primary-hover);
   transform: translateY(-2px);
   box-shadow: 0 6px 20px var(--primary-glow);
+}
+
+.btn-disabled {
+  background: var(--text-tertiary);
+  cursor: not-allowed;
+  box-shadow: none;
+  opacity: 0.6;
+}
+
+.btn-disabled:hover {
+  background: var(--text-tertiary);
+  transform: none;
+  box-shadow: none;
+}
+
+.dot-waiting {
+  background: var(--warning-color);
+  animation: pulse-dot 1.5s infinite;
+}
+
+@keyframes pulse-dot {
+  0% { opacity: 0.5; }
+  50% { opacity: 1; }
+  100% { opacity: 0.5; }
 }
 
 @media (max-width: 768px) {
