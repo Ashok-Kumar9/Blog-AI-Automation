@@ -1,5 +1,5 @@
 import React from 'react';
-import { Sparkles, CheckCircle2, RefreshCw, Tag, Briefcase, TrendingUp, Lightbulb, Target, Monitor, Rocket } from 'lucide-react';
+import { Sparkles, CheckCircle2, Search, Tag, Briefcase, TrendingUp, Lightbulb, Target, Monitor, Rocket } from 'lucide-react';
 
 const TOPIC_ICONS = [Briefcase, TrendingUp, Lightbulb, Target, Monitor, Rocket];
 
@@ -8,15 +8,15 @@ const TopicsGrid = ({ topics, generatedBlogs, onSelectTopic, onNewCategory, cate
     <div className="topics-page">
       <div className="topics-page-header">
         <div>
+          <h2 className="topics-heading">Trending Topics</h2>
           {category && (
-            <div className="topics-category-badge">
-              <Tag size={12} /> {category}
+            <div className="topics-subtitle">
+              Generated for <span className="highlight-category">{category}</span>
             </div>
           )}
-          <h2 className="topics-heading">Trending Topics</h2>
         </div>
         <button className="new-category-btn" onClick={onNewCategory}>
-          <RefreshCw size={15} />
+          <Search size={15} />
           Explore New Category
         </button>
       </div>

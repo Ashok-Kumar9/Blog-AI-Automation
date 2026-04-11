@@ -23,7 +23,6 @@ const BlogViewer = ({ selectedTopic, blogContent, onBack, loading, onCopy, onDow
       </div>
 
       <div className="blog-meta">
-        <div className="topic-tag">Selected Topic</div>
         <h2>{selectedTopic}</h2>
       </div>
 
