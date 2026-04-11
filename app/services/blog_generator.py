@@ -1,5 +1,14 @@
 from typing import List
+from dataclasses import dataclass
 from app.core.openai_utils import client
+
+
+@dataclass
+class InternalLink:
+    product_keyword: str   # Anchor text / keyword to link from
+    url: str               # Destination URL
+    integration_count: int # How many times it should appear in the article
+
 
 SYSTEM_PROMPT = """\
 You are the Lead Brand Strategist and Senior Content Writer for Credit Saison India — \
@@ -58,14 +67,26 @@ Imagery direction (when describing visuals): Authentic Indian contexts — real 
 real goals, diverse settings across Tier 1, 2, and 3 cities. No stock-photo clichés or exaggerated visuals.
 """
 
+
+def _format_internal_links(internal_links: List[InternalLink]) -> str:
+    lines = []
+    for i, link in enumerate(internal_links, start=1):
+        lines.append(
+            f"  {i}. Keyword : \"{link.product_keyword}\"\n"
+            f"     URL     : {link.url}\n"
+            f"     Embed   : exactly {link.integration_count} time(s) across the article"
+        )
+    return "\n\n".join(lines)
+
+
 def build_user_prompt(
     topic: str,
     audience: str,
     word_count: int,
     specific_goal: str,
-    internal_links: List[str],
+    internal_links: List[InternalLink],
 ) -> str:
-    links_formatted = "\n".join(f"  - {url}" for url in internal_links)
+    links_formatted = _format_internal_links(internal_links)
 
     return f"""\
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -85,8 +106,8 @@ STRUCTURE REQUIREMENTS
 
 
 1. SEO META BLOCK (output this first, clearly labelled):
-   - SEO URL slug       : lowercase, hyphen-separated, keyword-rich (no stop words)
-   - SEO Title          : exactly 55–60 characters, benefit-driven, includes primary keyword
+   - SEO URL slug        : lowercase, hyphen-separated, keyword-rich (no stop words)
+   - SEO Title           : exactly 55–60 characters, benefit-driven, includes primary keyword
    - SEO Meta Description: exactly 155–160 characters, compelling, includes primary keyword and a soft CTA
 
 
@@ -108,9 +129,12 @@ and step-by-step processes.
 
 
 3. INTERNAL LINKS:
-   Identify 3–5 natural opportunities within the article to hyperlink to the following pages. \
-Use descriptive anchor text that matches the surrounding context. Do not force links — only place \
-them where they genuinely add value for the reader.
+   The following links must be embedded within the article body. For each link:
+   - Use the specified keyword (or a close natural variant) as the hyperlink anchor text.
+   - Embed it exactly the stated number of times across different sections — never in the same paragraph twice.
+   - Only place links where they genuinely serve the reader. Do not force or cluster them.
+   - Format each as a standard markdown hyperlink: [anchor text](url)
+
 {links_formatted}
 
 
@@ -139,17 +163,19 @@ QUALITY CHECKLIST (verify before outputting)
 ☐ All headings are Title Case; body text is Sentence case
 ☐ Currency figures use Indian formatting (₹X,XX,XXX)
 ☐ EMI, KYC, NBFC explained on first use
-☐ Internal links placed naturally with descriptive anchor text
+☐ Each internal link appears exactly the specified number of times with natural anchor text
+☐ No two instances of the same link appear in the same paragraph
 ☐ SEO meta block is complete and within character limits
 ☐ CTA is encouraging, not pressuring
 """
+
 
 def generate_blog(
     topic: str,
     audience: str,
     word_count: int,
     specific_goal: str,
-    internal_links: List[str],
+    internal_links: List[InternalLink],
 ) -> str:
     """Generates a full blog post using OpenAI's gpt-4o model."""
     user_prompt = build_user_prompt(topic, audience, word_count, specific_goal, internal_links)
