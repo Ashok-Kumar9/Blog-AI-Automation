@@ -12,19 +12,6 @@ class Settings:
     # OpenAI Settings
     OPENAI_API_KEY: str = os.getenv("OPENAI_API_KEY")
     
-    # Default Topics Generation
-    DEFAULT_BLOG_CATEGORY: str = "MSME Loan"
-    # Default Blog Generation
-    DEFAULT_TARGET_AUDIENCE: str = "Small business owners and entrepreneurs in Tier 2 and Tier 3 cities"
-    DEFAULT_WORD_COUNT_GOAL: int = 2500
-    DEFAULT_SPECIFIC_GOAL: str = "Encourage female entrepreneurs to explore expansion loans for their businesses"
-    DEFAULT_INTERNAL_LINKS: List[str] = [
-        "https://creditsaison.in/business-loan",
-        "https://creditsaison.in/vyapari-loans",
-        "https://creditsaison.in/home-loan",
-        "https://creditsaison.in/doctor-loan",
-        "https://creditsaison.in/small-business-loan",
-        "https://creditsaison.in/loan-against-property",
-    ]
+
 
 settings = Settings()

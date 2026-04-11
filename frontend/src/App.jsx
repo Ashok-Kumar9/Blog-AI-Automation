@@ -14,6 +14,7 @@ function App() {
       audience: '',
       wordCount: 2500,
       goal: '',
+      internalLinks: [],
     };
   });
   const [topics, setTopics] = useState(() => {
@@ -56,26 +57,7 @@ function App() {
     localStorage.setItem('blog_view', view);
   }, [view]);
 
-  // --- Effects: Load Defaults ---
-  useEffect(() => {
-    const hasStoredConfig = localStorage.getItem('blog_config');
-    if (!hasStoredConfig) {
-      fetch(`${API_BASE}/api/defaults`)
-        .then(res => res.json())
-        .then(data => {
-          setConfig({
-            category: data.category,
-            audience: data.audience,
-            wordCount: data.word_count,
-            goal: data.goal,
-          });
-        })
-        .catch(err => {
-          console.error('Failed to fetch defaults:', err);
-          setStatus({ text: 'API Sync Offline', type: 'error' });
-        });
-    }
-  }, []);
+
 
   // --- Handlers ---
   const handleGenerateTopics = async () => {
@@ -128,6 +110,7 @@ function App() {
           target_audience: config.audience,
           word_count_goal: config.wordCount,
           specific_goal: config.goal,
+          internal_links: config.internalLinks,
         }),
       });
       if (!resp.ok) throw new Error('Article generation failed');

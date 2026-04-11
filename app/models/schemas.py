@@ -1,16 +1,20 @@
-from typing import List, Optional
-from pydantic import BaseModel, Field
-from app.core.config import settings
+from typing import List
+from pydantic import BaseModel
 
 class TopicRequest(BaseModel):
-    category: str = Field(default=settings.DEFAULT_BLOG_CATEGORY)
+    category: str
+
+class InternalLinkSchema(BaseModel):
+    product_keyword: str
+    url: str
+    integration_count: int
 
 class BlogRequest(BaseModel):
     topic: str
-    target_audience: str = Field(default=settings.DEFAULT_TARGET_AUDIENCE)
-    word_count_goal: int = Field(default=settings.DEFAULT_WORD_COUNT_GOAL)
-    specific_goal: str = Field(default=settings.DEFAULT_SPECIFIC_GOAL)
-    internal_links: List[str] = Field(default=settings.DEFAULT_INTERNAL_LINKS)
+    target_audience: str
+    word_count_goal: int
+    specific_goal: str
+    internal_links: List[InternalLinkSchema]
 
 class TopicResponse(BaseModel):
     category: str
