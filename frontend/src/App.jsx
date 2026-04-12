@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { blogService } from './services/blogService';
+import { imageStorage } from './utils/imageStorage';
 import './App.css';
 
 // Components
@@ -42,11 +43,9 @@ function App() {
     return saved ? JSON.parse(saved) : {};
   });
 
-  // --- Generated images map: { [topicString]: base64ImageString } (persisted)
-  const [generatedImages, setGeneratedImages] = useState(() => {
-    const saved = localStorage.getItem('blog_generated_images_map');
-    return saved ? JSON.parse(saved) : {};
-  });
+  // --- Generated images map: { [topicString]: base64ImageString } (persisted via IndexedDB)
+  const [generatedImages, setGeneratedImages] = useState({});
+  const [imagesLoaded, setImagesLoaded] = useState(false);
 
   const [selectedTopic, setSelectedTopic] = useState(null);
   const [loadingBlog, setLoadingBlog] = useState(false);
@@ -73,8 +72,19 @@ function App() {
   }, [generatedBlogs]);
 
   useEffect(() => {
-    localStorage.setItem('blog_generated_images_map', JSON.stringify(generatedImages));
-  }, [generatedImages]);
+    imageStorage.getMap().then(map => {
+      setGeneratedImages(map || {});
+      setImagesLoaded(true);
+      // Clean up old bloated localStorage key to free memory
+      localStorage.removeItem('blog_generated_images_map');
+    });
+  }, []);
+
+  useEffect(() => {
+    if (imagesLoaded) {
+      imageStorage.setMap(generatedImages);
+    }
+  }, [generatedImages, imagesLoaded]);
 
   // --- Handlers
 
