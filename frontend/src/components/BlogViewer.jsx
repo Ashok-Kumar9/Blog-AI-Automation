@@ -8,6 +8,7 @@ const BlogViewer = ({
   topicImage,
   loadingImage,
   onGenerateImage,
+  onDownloadImage,
   onBack,
   loading,
   onCopy,
@@ -28,6 +29,11 @@ const BlogViewer = ({
             {loadingImage ? <Loader2 size={16} className="spinner" /> : <ImageIcon size={16} />}
             Image
           </button>
+          {topicImage && (
+            <button className="secondary-btn" onClick={onDownloadImage} title="Download Hero Image">
+              <Download size={16} /> .png
+            </button>
+          )}
           <button className="secondary-btn" onClick={onCopy}>
             <Copy size={16} /> Copy
           </button>

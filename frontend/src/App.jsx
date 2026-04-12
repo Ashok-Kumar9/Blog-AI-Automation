@@ -192,6 +192,15 @@ function App() {
     URL.revokeObjectURL(url);
   };
 
+  const downloadImage = () => {
+    const base64Data = generatedImages[selectedTopic];
+    if (!base64Data) return;
+    const a = document.createElement('a');
+    a.href = `data:image/png;base64,${base64Data}`;
+    a.download = `${selectedTopic?.toLowerCase().replace(/ /g, '_')}_hero.png`;
+    a.click();
+  };
+
   return (
     <div className={`app-container ${view === 'empty' || view === 'loading' ? 'app-container--centered' : ''}`}>
       {/* Header only shows on topics/blog views */}
@@ -228,6 +237,7 @@ function App() {
           topicImage={generatedImages[selectedTopic] || null}
           loadingImage={loadingImage}
           onGenerateImage={handleGenerateImage}
+          onDownloadImage={downloadImage}
           onBack={() => setView('topics')}
           loading={loadingBlog}
           onCopy={copyToClipboard}
