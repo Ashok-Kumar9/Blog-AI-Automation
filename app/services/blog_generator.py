@@ -135,7 +135,8 @@ def generate_blog(
             {"role": "system", "content": SYSTEM_PROMPT},
             {"role": "user", "content": user_prompt},
         ],
-        temperature=0.7,
+        temperature=0.1,
+        tools=[{"type": "web_search_preview"}],
         max_tokens=6000,
     )
 
