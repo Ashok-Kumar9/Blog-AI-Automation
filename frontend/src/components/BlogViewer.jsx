@@ -2,17 +2,17 @@ import React from 'react';
 import ReactMarkdown from 'react-markdown';
 import { ArrowLeft, Copy, Download, Loader2, RefreshCw, Image as ImageIcon } from 'lucide-react';
 
-const BlogViewer = ({ 
-  selectedTopic, 
-  blogContent, 
+const BlogViewer = ({
+  selectedTopic,
+  blogContent,
   topicImage,
   loadingImage,
   onGenerateImage,
-  onBack, 
-  loading, 
-  onCopy, 
-  onDownload, 
-  onRegenerate 
+  onBack,
+  loading,
+  onCopy,
+  onDownload,
+  onRegenerate
 }) => {
   return (
     <div className="blog-view">
@@ -25,7 +25,7 @@ const BlogViewer = ({
             <RefreshCw size={16} /> Regenerate
           </button>
           <button className="secondary-btn" onClick={onGenerateImage} disabled={loadingImage} title="Generate Hero Image">
-            {loadingImage ? <Loader2 size={16} className="spinner" /> : <ImageIcon size={16} />} 
+            {loadingImage ? <Loader2 size={16} className="spinner" /> : <ImageIcon size={16} />}
             Image
           </button>
           <button className="secondary-btn" onClick={onCopy}>
@@ -42,16 +42,6 @@ const BlogViewer = ({
       </div>
 
       <div className="blog-content-wrapper card">
-        {topicImage && !loading && (
-          <div className="blog-hero-image" style={{ marginBottom: '24px' }}>
-            <img 
-              src={`data:image/png;base64,${topicImage}`} 
-              alt="Blog Hero" 
-              style={{ width: '100%', maxHeight: '400px', objectFit: 'cover', borderRadius: '8px' }} 
-            />
-          </div>
-        )}
-        
         {loading ? (
           <div className="blog-loading">
             <div className="blog-loading-orb">
@@ -71,6 +61,15 @@ const BlogViewer = ({
           </div>
         ) : (
           <div className="markdown-body">
+            {topicImage && (
+              <div className="blog-hero-image" style={{ marginBottom: '32px' }}>
+                <img
+                  src={`data:image/png;base64,${topicImage}`}
+                  alt="Blog Hero"
+                  style={{ width: '100%', height: 'auto', borderRadius: '8px', display: 'block' }}
+                />
+              </div>
+            )}
             <ReactMarkdown>{blogContent}</ReactMarkdown>
           </div>
         )}
