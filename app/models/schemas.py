@@ -23,3 +23,9 @@ class TopicResponse(BaseModel):
 class BlogResponse(BaseModel):
     topic: str
     content: str
+
+class ImageRequest(BaseModel):
+    blog_title: str
+
+class ImageResponse(BaseModel):
+    image_base64: str

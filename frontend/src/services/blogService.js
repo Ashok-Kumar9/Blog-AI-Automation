@@ -38,5 +38,22 @@ export const blogService = {
     });
     if (!resp.ok) throw new Error('Article generation failed');
     return await resp.json();
+  },
+
+  /**
+   * Fetches the hero image for a given topic
+   * @param {Object} params 
+   * @returns {Promise<Object>}
+   */
+  async generateImage(params) {
+    const resp = await fetch(`${API_BASE}/api/generate-image`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        blog_title: params.blog_title || params.topic,
+      }),
+    });
+    if (!resp.ok) throw new Error('Image generation failed');
+    return await resp.json();
   }
 };

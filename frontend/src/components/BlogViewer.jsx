@@ -1,8 +1,19 @@
 import React from 'react';
 import ReactMarkdown from 'react-markdown';
-import { ArrowLeft, Copy, Download, Loader2, RefreshCw } from 'lucide-react';
+import { ArrowLeft, Copy, Download, Loader2, RefreshCw, Image as ImageIcon } from 'lucide-react';
 
-const BlogViewer = ({ selectedTopic, blogContent, onBack, loading, onCopy, onDownload, onRegenerate }) => {
+const BlogViewer = ({ 
+  selectedTopic, 
+  blogContent, 
+  topicImage,
+  loadingImage,
+  onGenerateImage,
+  onBack, 
+  loading, 
+  onCopy, 
+  onDownload, 
+  onRegenerate 
+}) => {
   return (
     <div className="blog-view">
       <div className="blog-view-topbar">
@@ -12,6 +23,10 @@ const BlogViewer = ({ selectedTopic, blogContent, onBack, loading, onCopy, onDow
         <div className="blog-action-group">
           <button className="secondary-btn" onClick={onRegenerate} title="Change parameters and regenerate">
             <RefreshCw size={16} /> Regenerate
+          </button>
+          <button className="secondary-btn" onClick={onGenerateImage} disabled={loadingImage} title="Generate Hero Image">
+            {loadingImage ? <Loader2 size={16} className="spinner" /> : <ImageIcon size={16} />} 
+            Image
           </button>
           <button className="secondary-btn" onClick={onCopy}>
             <Copy size={16} /> Copy
@@ -27,6 +42,16 @@ const BlogViewer = ({ selectedTopic, blogContent, onBack, loading, onCopy, onDow
       </div>
 
       <div className="blog-content-wrapper card">
+        {topicImage && !loading && (
+          <div className="blog-hero-image" style={{ marginBottom: '24px' }}>
+            <img 
+              src={`data:image/png;base64,${topicImage}`} 
+              alt="Blog Hero" 
+              style={{ width: '100%', maxHeight: '400px', objectFit: 'cover', borderRadius: '8px' }} 
+            />
+          </div>
+        )}
+        
         {loading ? (
           <div className="blog-loading">
             <div className="blog-loading-orb">

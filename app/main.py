@@ -1,9 +1,11 @@
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from app.core.config import settings
-from app.models.schemas import TopicRequest, TopicResponse, BlogRequest, BlogResponse
+from app.models.schemas import TopicRequest, TopicResponse, BlogRequest, BlogResponse, ImageRequest, ImageResponse
 from app.services.title_generator import generate_trending_topics
 from app.services.blog_generator import generate_blog, InternalLink
+from app.services.image_generator import generate_blog_image
+import base64
 
 app = FastAPI(
     title=settings.APP_TITLE,
@@ -63,6 +65,17 @@ async def api_generate_blog(request: BlogRequest):
             internal_links=internal_links
         )
         return BlogResponse(topic=request.topic, content=content)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.post("/api/generate-image", response_model=ImageResponse)
+async def api_generate_image(request: ImageRequest):
+    try:
+        image_bytes = generate_blog_image(
+            blog_title=request.blog_title
+        )
+        base64_str = base64.b64encode(image_bytes).decode("utf-8")
+        return ImageResponse(image_base64=base64_str)
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 

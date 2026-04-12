@@ -37,15 +37,20 @@ function App() {
     return saved ? JSON.parse(saved) : [];
   });
 
-  // --- Generated blogs map: { [topicString]: blogContent } (persisted)
   const [generatedBlogs, setGeneratedBlogs] = useState(() => {
     const saved = localStorage.getItem('blog_generated_map');
     return saved ? JSON.parse(saved) : {};
   });
 
-  // --- Active blog topic + loading
+  // --- Generated images map: { [topicString]: base64ImageString } (persisted)
+  const [generatedImages, setGeneratedImages] = useState(() => {
+    const saved = localStorage.getItem('blog_generated_images_map');
+    return saved ? JSON.parse(saved) : {};
+  });
+
   const [selectedTopic, setSelectedTopic] = useState(null);
   const [loadingBlog, setLoadingBlog] = useState(false);
+  const [loadingImage, setLoadingImage] = useState(false);
 
   // --- Modal
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -66,6 +71,10 @@ function App() {
   useEffect(() => {
     localStorage.setItem('blog_generated_map', JSON.stringify(generatedBlogs));
   }, [generatedBlogs]);
+
+  useEffect(() => {
+    localStorage.setItem('blog_generated_images_map', JSON.stringify(generatedImages));
+  }, [generatedImages]);
 
   // --- Handlers
 
@@ -129,6 +138,25 @@ function App() {
     }
   };
 
+  const handleGenerateImage = async () => {
+    if (!selectedTopic) return;
+    setLoadingImage(true);
+    setStatus({ text: 'Generating Image...', type: 'pending' });
+
+    try {
+      const data = await blogService.generateImage({
+        blog_title: selectedTopic,
+      });
+      setGeneratedImages(prev => ({ ...prev, [selectedTopic]: data.image_base64 }));
+      setStatus({ text: 'Image Generated!', type: 'success' });
+    } catch (err) {
+      console.error(err);
+      setStatus({ text: 'Image Creation Failed', type: 'error' });
+    } finally {
+      setLoadingImage(false);
+    }
+  };
+
   // Regenerate: open modal for an already-generated topic
   const handleRegenerate = () => {
     setPendingTopic(selectedTopic);
@@ -187,6 +215,9 @@ function App() {
         <BlogViewer
           selectedTopic={selectedTopic}
           blogContent={generatedBlogs[selectedTopic] || ''}
+          topicImage={generatedImages[selectedTopic] || null}
+          loadingImage={loadingImage}
+          onGenerateImage={handleGenerateImage}
           onBack={() => setView('topics')}
           loading={loadingBlog}
           onCopy={copyToClipboard}
