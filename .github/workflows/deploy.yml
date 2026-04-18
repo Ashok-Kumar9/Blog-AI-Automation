@@ -1,0 +1,34 @@
+name: Deploy to GCP
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    name: SSH, pull, and rebuild on GCP VM
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.GCP_VM_HOST }}
+          username: ${{ secrets.GCP_VM_USER }}
+          key: ${{ secrets.GCP_SSH_KEY }}
+          script: |
+            cd ~/blog-automation
+
+            # Pull latest code
+            git pull origin main
+
+            # Write secrets to .env (never committed to git)
+            cat > .env <<'EOF'
+            OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}
+            EOF
+
+            # Rebuild images on the server and restart containers
+            docker compose up -d --build --remove-orphans
+
+            # Free up disk space from old layers
+            docker image prune -f
