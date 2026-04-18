@@ -35,14 +35,33 @@ def build_user_prompt(
 
     return f"""\
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-CURRENT TASK: LONG-FORM AUTHORITY BLOG
+TASK: GENERATE A LONG-FORM AUTHORITY BLOG
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Topic          : [{topic}]
-Target audience: [{audience}]
-Word count goal: [{word_count}+ words — write with depth, ensure no fluff]
-Specific goal  : [{specific_goal}]
-INTERNAL LINKS:  [{links_formatted}]
+Using the details below, generate a complete, high-quality blog by strictly following the defined system prompt guidelines and content generation process.
+
+Topic: [{topic}]
+
+Target Audience: [{audience}]
+- Adapt tone, examples, and explanations specifically for this audience
+
+Content Goal: [{specific_goal}]
+- Ensure the blog clearly delivers on this goal
+
+Word Count Target: [{word_count}+ words]
+- Maintain depth and clarity
+- Avoid fluff, repetition, or filler
+
+Internal Links (if applicable):
+[{links_formatted}]
+- Integrate naturally within relevant sections only
+
+Output Requirements:
+- Generate the full blog end-to-end (including SEO metadata, title, body, and conclusion)
+- Structure content with clear headings and logical flow
+- Keep content informative, practical, and easy to understand
+- Ensure terminology is explained where needed
+- Maintain a human, supportive tone throughout
 """.strip()
 
 
