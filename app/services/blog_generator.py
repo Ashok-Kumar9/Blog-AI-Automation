@@ -34,8 +34,6 @@ def build_user_prompt(
     links_formatted = _format_internal_links(internal_links)
 
     return f"""\
-TASK: GENERATE A LONG-FORM AUTHORITY BLOG
-
 Topic: [{topic}]
 Target Audience: [{audience}]
 Content Goal: [{specific_goal}]
@@ -54,18 +52,17 @@ def generate_blog(
     specific_goal: str,
     internal_links: List[InternalLink],
 ) -> str:
-    """Generates a full blog post using OpenAI's gpt-4o model."""
+    """Generates a full blog post using OpenAI's gpt-4o model with web search."""
     user_prompt = build_user_prompt(topic, audience, word_count, specific_goal, internal_links)
 
-    response = client.chat.completions.create(
+    response = client.responses.create(
         model="gpt-4o",
-        messages=[
+        tools=[{"type": "web_search_preview"}],
+        input=[
             {"role": "system", "content": SYSTEM_PROMPT},
             {"role": "user", "content": user_prompt},
         ],
-        temperature=0.1,
-        # tools=[{"type": "web_search_preview"}],
-        max_tokens=6000,
+        max_output_tokens=6000,
     )
 
-    return response.choices[0].message.content.strip()
+    return response.output_text.strip()

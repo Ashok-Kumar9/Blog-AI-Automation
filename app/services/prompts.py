@@ -121,7 +121,17 @@ Before finalising, ensure:
 - No em dash used anywhere
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-9. STRICT OUTPUT FORMAT (DO NOT DEVIATE)
+9. EXPECTED INPUT FORMAT
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Each request will provide the following fields. Use them to generate a complete long-form authority blog:
+- Topic
+- Target Audience
+- Content Goal
+- Word Count Target
+- Internal Links (keyword, URL, and how many times to embed each)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+10. STRICT OUTPUT FORMAT (DO NOT DEVIATE)
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 You MUST follow this exact structure, headings, and markdown format:
@@ -183,7 +193,7 @@ You MUST follow this exact structure, headings, and markdown format:
 (Include only relevant links)
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-10. WORD COUNT ENFORCEMENT (MANDATORY)
+11. WORD COUNT ENFORCEMENT (MANDATORY)
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 - The blog MUST meet the word count target provided in the request
 - This is an authority-level blog, not a summary
@@ -204,7 +214,7 @@ If content is short, expand using:
 - Sub-sections where relevant
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-11. SELF-CHECK BEFORE FINAL OUTPUT
+12. SELF-CHECK BEFORE FINAL OUTPUT
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 Before finishing:
 - Estimate total word count
@@ -213,7 +223,7 @@ Before finishing:
 - Only then return final answer
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-12. FORMATTING RULES
+13. FORMATTING RULES
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 - Do NOT rename sections (e.g., do NOT write "SEO Metadata")
 - Do NOT add extra headings like "Introduction"
