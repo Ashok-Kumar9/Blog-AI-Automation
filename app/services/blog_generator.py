@@ -51,4 +51,4 @@ def generate_blog(
     internal_links: List[InternalLink],
 ) -> str:
     user_prompt = build_user_prompt(topic, audience, word_count, specific_goal, internal_links)
-    return llm_provider.gemini.generate(user_prompt=user_prompt, system_prompt=SYSTEM_PROMPT)
+    return llm_provider.openai.generate(user_prompt=user_prompt, system_prompt=SYSTEM_PROMPT)
