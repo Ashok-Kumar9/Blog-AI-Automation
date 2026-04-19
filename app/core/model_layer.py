@@ -4,9 +4,10 @@ from app.core.config import settings
 
 logger = logging.getLogger(__name__)
 
-GEMINI_BLOG_MODEL  = "gemini-2.5-flash"
-GEMINI_IMAGE_MODEL = "gemini-2.5-flash-image"
-OPENAI_TITLE_MODEL = "gpt-4o"
+GEMINI_BLOG_MODEL   = "gemini-2.5-flash"
+GEMINI_IMAGE_MODEL  = "gemini-2.5-flash-image"
+GEMINI_IMAGEN_MODEL = "imagen-4.0-generate-001"
+OPENAI_TITLE_MODEL  = "gpt-4o"
 
 
 class GeminiClient:
@@ -54,6 +55,20 @@ class GeminiClient:
             if part.inline_data is not None:
                 return part.inline_data.data
         raise ValueError("Gemini image generation returned no image data.")
+
+    def generate_image_imagen(self, prompt: str, number_of_images: int = 1) -> list[bytes]:
+        from google.genai import types
+        response = self._sdk.models.generate_images(
+            model=GEMINI_IMAGEN_MODEL,
+            prompt=prompt,
+            config=types.GenerateImagesConfig(
+                number_of_images=number_of_images,
+            ),
+        )
+        images = [gi.image.image_bytes for gi in response.generated_images]
+        if not images:
+            raise ValueError("Imagen returned no image data.")
+        return images
 
     def __repr__(self) -> str:
         return f"<GeminiClient initialized={self._client is not None}>"
