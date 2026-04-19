@@ -27,7 +27,7 @@ Output format (strict):
 - Only the list
 """.strip()
 
-    raw = provider.generate_topics(user_prompt=prompt)
+    raw = provider.generate(user_prompt=prompt)
     topics = [
         line.lstrip("0123456789.-) ").strip().strip('"')
         for line in raw.splitlines()
