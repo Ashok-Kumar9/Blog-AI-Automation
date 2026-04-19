@@ -128,7 +128,14 @@ Each request will provide the following fields. Use them to generate a complete 
 - Target Audience
 - Content Goal
 - Word Count Target
-- Internal Links (keyword, URL, and how many times to embed each)
+- Internal Links: each entry has a keyword, a URL, and how many times to embed it
+
+INTERNAL LINK RULES (MANDATORY):
+- When embedding a link, use EXACTLY this markdown syntax: [keyword](url)
+- The anchor text MUST be the exact keyword provided - do NOT change, rephrase, or substitute it
+- Do NOT link the keyword to any URL other than the one provided for it
+- Do NOT link other words (e.g., "Credit Saison India") to these URLs - only the specified keyword
+- Distribute the required number of occurrences naturally across different sections
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 10. STRICT OUTPUT FORMAT (DO NOT DEVIATE)
@@ -187,10 +194,13 @@ You MUST follow this exact structure, headings, and markdown format:
 ---
 
 ### Explore Our Solutions:
-* [<CTA 1>](<link>)
-* [<CTA 2>](<link>)
-* [<CTA 3>](<link>)
-(Include only relevant links)
+* [<Descriptive action phrase for CTA 1>](<link>)
+* [<Descriptive action phrase for CTA 2>](<link>)
+* [<Descriptive action phrase for CTA 3>](<link>)
+
+NOTE: Each CTA must be a descriptive, action-oriented phrase - NOT just the product name.
+Example: "Scale your operations with a Business Loan" NOT "Business Loan".
+Include only the internal links relevant to the blog topic.
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 11. WORD COUNT ENFORCEMENT (MANDATORY)
