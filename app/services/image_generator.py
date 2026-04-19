@@ -40,7 +40,7 @@ Search online and find key visual elements for this Indian personal finance blog
 
 Focus specifically on the Indian context:
 - What real-world Indian setting best represents this topic?
-  (e.g. a PSU bank branch, an NBFCs office, a urban apartment, a kirana shop, a government office)
+  (e.g. a PSU bank branch, an NBFC office, an urban apartment, a kirana shop, a government office)
 - Who are the typical people involved?
   (e.g. salaried professional in Mumbai, farmer in rural Maharashtra, small business owner, homemaker)
 - What Indian-specific objects, documents, or props are present?
@@ -66,38 +66,20 @@ def build_image_prompt(blog_title: str, research_context: str = "") -> str:
 Create a photorealistic hero image for this Indian personal finance blog:
 "{blog_title}"
 {context_section}
-PEOPLE:
-- Real Indian people only — South Asian skin tones, Indian facial features
-- Authentic ethnic diversity (North, South, East, West Indian appearances)
-- Clothing: contemporary Indian casuals or formals — kurta, saree, salwar, office wear
-- Natural expressions — no posed smiles, candid moments only
-- Age range appropriate to the topic (young professional, middle-aged couple, senior citizen)
+Scene:
+- Show a real-life financial interaction relevant to the topic context above
+- Focus on hands, documents, discussion
 
-SETTING:
-- Authentic Indian environments — a bank branch with Hindi signage, a modest urban flat,
-  a semi-urban market, a government office, a jewellery shop, an NBFC counter
-- Indian props where relevant: Aadhaar / PAN card, passbook, salary slip, GST bill,
-  UPI QR code, gold jewellery, fixed deposit receipt, insurance policy document
-- Natural Indian light — warm afternoon sunlight through a window, tube-light office,
-  open-air market shade
+Style:
+- Shot on 35mm/50mm lens
+- Shallow depth of field
+- Natural lighting only
 
-SCENE:
-- Show the real-life financial interaction described in the topic context above
-- Focus on the human moment: hands exchanging documents, signing papers,
-  reviewing a phone screen, counting currency, discussing at a counter
-
-PHOTOGRAPHY STYLE:
-- Shot on 35mm or 50mm prime lens
-- Shallow depth of field, subject sharp, background softly blurred
-- Natural or available light — no studio flash
-- Warm, slightly desaturated tones — feels like real India, not a stock photo
-
-STRICTLY AVOID:
-- Western or generic Asian appearances
-- Clean, sterile Western office environments
-- Icons, UI overlays, illustrations, 3D objects, or text
-- Overly bright or artificially lit studio setups
-- Tourist-India clichés (Taj Mahal, saffron, elephants)
+Avoid:
+- No icons, no UI overlays
+- No illustrations
+- No 3D objects
+- No text
 
 {BRAND_VISUAL_STYLE}
 """
