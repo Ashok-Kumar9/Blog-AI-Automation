@@ -20,14 +20,11 @@ class AIProvider(ABC):
     def __init__(self, provider_name: str) -> None:
         self._cfg = MODEL_REGISTRY[provider_name]
 
-    def generate_blog(self, system_prompt: str, user_prompt: str) -> str:
-        return self._text_call(system_prompt, user_prompt, self._cfg["blog"])
-
-    def generate_topics(self, user_prompt: str) -> str:
-        return self._text_call("", user_prompt, self._cfg["topic"])
-
-    def generate_image(self, prompt: str) -> bytes:
-        return self._image_call(prompt, self._cfg["image"])
+    def generate(self, task: str, user_prompt: str, system_prompt: str = "") -> str | bytes:
+        cfg = self._cfg[task]
+        if task == "image":
+            return self._image_call(user_prompt, cfg)
+        return self._text_call(system_prompt, user_prompt, cfg)
 
     @abstractmethod
     def _text_call(self, system_prompt: str, user_prompt: str, cfg: dict) -> str: ...
