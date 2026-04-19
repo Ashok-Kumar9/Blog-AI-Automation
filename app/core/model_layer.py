@@ -31,20 +31,20 @@ class AIProvider(ABC):
         print(f"[AI] Provider: {provider_name.upper()} | "
               f"blog={self._cfg['blog']['model']} | "
               f"topic={self._cfg['topic']['model']} | "
-              f"image={self._cfg['image']['model']}")
+              f"image={self._cfg['image']['model']}", flush=True)
 
     # ── Public task API (used by services) ────────────────────────────────────
 
     def generate_blog(self, system_prompt: str, user_prompt: str) -> str:
-        print(f"[AI] generate_blog  → {self._cfg['blog']['model']}")
+        print(f"[AI] generate_blog  → {self._cfg['blog']['model']}", flush=True)
         return self._text_call(system_prompt, user_prompt, self._cfg["blog"])
 
     def generate_topics(self, user_prompt: str) -> str:
-        print(f"[AI] generate_topics → {self._cfg['topic']['model']}")
+        print(f"[AI] generate_topics → {self._cfg['topic']['model']}", flush=True)
         return self._text_call("", user_prompt, self._cfg["topic"])
 
     def generate_image(self, prompt: str) -> bytes:
-        print(f"[AI] generate_image  → {self._cfg['image']['model']}")
+        print(f"[AI] generate_image  → {self._cfg['image']['model']}", flush=True)
         return self._image_call(prompt, self._cfg["image"])
 
     # ── SDK-level hooks (implemented per provider) ────────────────────────────

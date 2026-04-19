@@ -24,7 +24,9 @@ jobs:
 
             # Write secrets to .env (never committed to git)
             cat > .env <<'EOF'
+            AI_PROVIDER=${{ secrets.AI_PROVIDER }}
             OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}
+            GEMINI_API_KEY=${{ secrets.GEMINI_API_KEY }}
             EOF
 
             # Rebuild images on the server and restart containers
