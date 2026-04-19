@@ -33,22 +33,18 @@ STYLE:
 # WEB RESEARCH
 # -------------------------------
 def _research_topic(blog_title: str) -> str:
-    return llm_provider.gemini.generate(
+    return llm_provider.openai.generate(
         user_prompt=f"""\
-Search online and find key visual elements for this Indian personal finance blog topic:
+Search online and identify the key visual elements for this blog topic:
 "{blog_title}"
 
-Focus specifically on the Indian context:
-- What real-world Indian setting best represents this topic?
-  (e.g. a PSU bank branch, an NBFC office, an urban apartment, a kirana shop, a government office)
-- Who are the typical people involved?
-  (e.g. salaried professional in Mumbai, farmer in rural Maharashtra, small business owner, homemaker)
-- What Indian-specific objects, documents, or props are present?
-  (e.g. Aadhaar card, PAN card, passbook, salary slip, GST invoice, UPI QR code, gold jewellery)
-- Any relevant Indian cultural or seasonal context?
-  (e.g. festival season purchase, tax-filing deadline, agricultural cycle, wedding expenses)
+Describe a realistic scene that would visually represent this topic in an Indian context. Cover:
+- The setting (physical location or environment most associated with this topic)
+- The people (who is typically involved — their profile, age group, gender, attire)
+- The objects or props that would naturally appear in this scenario
+- Any relevant cultural, seasonal, or situational context specific to India
 
-Return 2-3 concise, visual-focused sentences only."""
+Return 2-3 concise, visual-focused sentences only. Do not include brand names, text, or UI elements."""
     )
 
 
@@ -67,19 +63,26 @@ Create a photorealistic hero image for this Indian personal finance blog:
 "{blog_title}"
 {context_section}
 Scene:
-- Show a real-life financial interaction relevant to the topic context above
-- Focus on hands, documents, discussion
+- Show one or two real people fully visible in a natural, everyday Indian setting relevant to the topic
+- People should be the focal point — show their full body or at least from the waist up, with faces clearly visible and engaged in a natural activity
+- Include contextually relevant objects or documents in the scene
+- The environment and people's attire should feel authentically Indian
 
-Style:
-- Shot on 35mm/50mm lens
-- Shallow depth of field
-- Natural lighting only
+People:
+- Faces must be fully visible, expressive, and naturally lit
+- Avoid cropped heads, obscured faces, or faceless figures
+- Body language should convey the emotion or action relevant to the topic (confidence, concern, discussion, relief, etc.)
+
+Composition:
+- Balanced framing with people as the subject
+- Background should be soft but contextually relevant
+- Bright, airy, and uncluttered scene
 
 Avoid:
 - No icons, no UI overlays
-- No illustrations
-- No 3D objects
-- No text
+- No illustrations or 3D renders
+- No text or labels in the image
+- No disembodied hands or partial figures as the main subject
 
 {BRAND_VISUAL_STYLE}
 """
