@@ -1,16 +1,14 @@
 from typing import List
 from dataclasses import dataclass
-from app.core.openai_utils import client
+from app.core.model_layer import provider
+from app.services.prompts import SYSTEM_PROMPT
 
 
 @dataclass
 class InternalLink:
-    product_keyword: str   # Anchor text / keyword to link from
-    url: str               # Destination URL
-    integration_count: int # How many times it should appear in the article
-
-
-from app.services.prompts import SYSTEM_PROMPT
+    product_keyword: str
+    url: str
+    integration_count: int
 
 
 def _format_internal_links(internal_links: List[InternalLink]) -> str:
@@ -52,17 +50,5 @@ def generate_blog(
     specific_goal: str,
     internal_links: List[InternalLink],
 ) -> str:
-    """Generates a full blog post using OpenAI's gpt-4o model with web search."""
     user_prompt = build_user_prompt(topic, audience, word_count, specific_goal, internal_links)
-
-    response = client.responses.create(
-        model="gpt-4o",
-        tools=[{"type": "web_search_preview"}],
-        input=[
-            {"role": "system", "content": SYSTEM_PROMPT},
-            {"role": "user", "content": user_prompt},
-        ],
-        max_output_tokens=6000,
-    )
-
-    return response.output_text.strip()
+    return provider.generate_blog(system_prompt=SYSTEM_PROMPT, user_prompt=user_prompt)

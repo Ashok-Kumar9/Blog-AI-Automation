@@ -1,5 +1,5 @@
 from typing import List
-from app.core.openai_utils import client
+from app.core.model_layer import provider
 
 def generate_trending_topics(category: str) -> List[str]:
     """Generates 10 SEO-friendly blog post titles using OpenAI's web search tool."""
@@ -27,13 +27,7 @@ Output format (strict):
 - Only the list
 """.strip()
 
-    response = client.responses.create(
-        model="gpt-4o-mini",
-        tools=[{"type": "web_search_preview"}],
-        input=prompt,
-    )
-
-    raw = response.output_text.strip()
+    raw = provider.generate_topics(user_prompt=prompt)
     topics = [
         line.lstrip("0123456789.-) ").strip().strip('"')
         for line in raw.splitlines()

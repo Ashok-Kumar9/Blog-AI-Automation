@@ -1,5 +1,4 @@
-import base64
-from app.core.openai_utils import client
+from app.core.model_layer import provider
 
 # -------------------------------
 # MODE SWITCH
@@ -134,21 +133,5 @@ MOOD:
 # GENERATOR
 # -------------------------------
 def generate_blog_image(blog_title: str, mode: str = PHOTOREALISTIC) -> bytes:
-
     prompt = build_image_prompt(blog_title, mode)
-
-    response = client.images.generate(
-        # model="gpt-image-1-mini",
-        model="gpt-image-1.5",
-        prompt=prompt,
-        size="1536x1024",
-        quality="medium",
-        output_format="png",
-        n=1,
-    )
-
-    b64_data = response.data[0].b64_json
-    if not b64_data:
-        raise ValueError("Image generation returned no data.")
-
-    return base64.b64decode(b64_data)
+    return provider.generate_image(prompt)
