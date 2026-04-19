@@ -48,6 +48,9 @@ class GeminiClient:
             contents=prompt,
             config=types.GenerateContentConfig(
                 response_modalities=["IMAGE", "TEXT"],
+                image_config=types.ImageConfig(
+                    aspect_ratio="3:2",
+                )
             ),
         )
         for part in response.candidates[0].content.parts:
