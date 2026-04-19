@@ -85,11 +85,15 @@ class OpenAIClient:
             logger.debug("OpenAI SDK client initialized")
         return self._client
 
-    def generate(self, user_prompt: str) -> str:
+    def generate(self, user_prompt: str, system_prompt: str = "") -> str:
+        messages = []
+        if system_prompt:
+            messages.append({"role": "system", "content": system_prompt})
+        messages.append({"role": "user", "content": user_prompt})
         return self._sdk.responses.create(
             model=OPENAI_TITLE_MODEL,
             tools=[{"type": "web_search_preview"}],
-            input=user_prompt,
+            input=messages,
         ).output_text.strip()
 
     def __repr__(self) -> str:
