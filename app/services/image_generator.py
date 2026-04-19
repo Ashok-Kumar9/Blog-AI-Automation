@@ -35,15 +35,20 @@ STYLE:
 def _research_topic(blog_title: str) -> str:
     return llm_provider.gemini.generate(
         user_prompt=f"""\
-Search online and find key visual elements for this Indian financial blog topic:
+Search online and find key visual elements for this Indian personal finance blog topic:
 "{blog_title}"
 
-Return 2-3 concise sentences covering:
-- The real-world scene or scenario that best represents this topic
-- Key objects, people, or settings typically associated with it in an Indian context
-- Any specific visual details (e.g. type of document, location, activity)
+Focus specifically on the Indian context:
+- What real-world Indian setting best represents this topic?
+  (e.g. a PSU bank branch, an NBFCs office, a urban apartment, a kirana shop, a government office)
+- Who are the typical people involved?
+  (e.g. salaried professional in Mumbai, farmer in rural Maharashtra, small business owner, homemaker)
+- What Indian-specific objects, documents, or props are present?
+  (e.g. Aadhaar card, PAN card, passbook, salary slip, GST invoice, UPI QR code, gold jewellery)
+- Any relevant Indian cultural or seasonal context?
+  (e.g. festival season purchase, tax-filing deadline, agricultural cycle, wedding expenses)
 
-Be brief and visual-focused only."""
+Return 2-3 concise, visual-focused sentences only."""
     )
 
 
@@ -58,29 +63,41 @@ def build_image_prompt(blog_title: str, research_context: str = "") -> str:
     )
 
     return f"""\
-Create a photorealistic hero image for:
+Create a photorealistic hero image for this Indian personal finance blog:
 "{blog_title}"
 {context_section}
-STRICT RULES:
-- Real Indian people only
-- Natural expressions, candid moment
-- Real environments (home, office, bank, shop)
-- DSLR-style photography
+PEOPLE:
+- Real Indian people only — South Asian skin tones, Indian facial features
+- Authentic ethnic diversity (North, South, East, West Indian appearances)
+- Clothing: contemporary Indian casuals or formals — kurta, saree, salwar, office wear
+- Natural expressions — no posed smiles, candid moments only
+- Age range appropriate to the topic (young professional, middle-aged couple, senior citizen)
 
-Scene:
-- Show a real-life financial interaction relevant to the topic context above
-- Focus on hands, documents, discussion
+SETTING:
+- Authentic Indian environments — a bank branch with Hindi signage, a modest urban flat,
+  a semi-urban market, a government office, a jewellery shop, an NBFC counter
+- Indian props where relevant: Aadhaar / PAN card, passbook, salary slip, GST bill,
+  UPI QR code, gold jewellery, fixed deposit receipt, insurance policy document
+- Natural Indian light — warm afternoon sunlight through a window, tube-light office,
+  open-air market shade
 
-Style:
-- Shot on 35mm/50mm lens
-- Shallow depth of field
-- Natural lighting only
+SCENE:
+- Show the real-life financial interaction described in the topic context above
+- Focus on the human moment: hands exchanging documents, signing papers,
+  reviewing a phone screen, counting currency, discussing at a counter
 
-Avoid:
-- No icons, no UI overlays
-- No illustrations
-- No 3D objects
-- No text
+PHOTOGRAPHY STYLE:
+- Shot on 35mm or 50mm prime lens
+- Shallow depth of field, subject sharp, background softly blurred
+- Natural or available light — no studio flash
+- Warm, slightly desaturated tones — feels like real India, not a stock photo
+
+STRICTLY AVOID:
+- Western or generic Asian appearances
+- Clean, sterile Western office environments
+- Icons, UI overlays, illustrations, 3D objects, or text
+- Overly bright or artificially lit studio setups
+- Tourist-India clichés (Taj Mahal, saffron, elephants)
 
 {BRAND_VISUAL_STYLE}
 """
