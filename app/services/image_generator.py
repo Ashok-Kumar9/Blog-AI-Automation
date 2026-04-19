@@ -1,4 +1,4 @@
-from app.core.model_layer import provider
+from app.core.model_layer import llm_provider
 
 # -------------------------------
 # MODE SWITCH
@@ -134,4 +134,4 @@ MOOD:
 # -------------------------------
 def generate_blog_image(blog_title: str, mode: str = PHOTOREALISTIC) -> bytes:
     prompt = build_image_prompt(blog_title, mode)
-    return provider.generate_image(prompt)
+    return llm_provider.gemini.generate_image(prompt)
