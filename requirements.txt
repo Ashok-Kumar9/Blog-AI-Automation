@@ -1,5 +1,5 @@
 openai
-google-generativeai
+google-genai
 python-dotenv
 requests
 googlesearch-python

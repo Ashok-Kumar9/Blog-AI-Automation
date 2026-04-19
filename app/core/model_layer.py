@@ -4,32 +4,20 @@ from app.core.config import settings
 
 logger = logging.getLogger(__name__)
 
-MODEL_REGISTRY = {
-    "blog": {
-        "openai": {"model": "gpt-4o",          "max_tokens": 6000, "web_search": True},
-        "gemini": {"model": "gemini-2.0-flash", "max_tokens": 6000, "web_search": True},
-    },
-    "topic": {
-        "openai": {"model": "gpt-4o-mini",      "max_tokens": None, "web_search": True},
-        "gemini": {"model": "gemini-2.0-flash", "max_tokens": None, "web_search": True},
-    },
-    "image": {
-        "openai": {"model": "gpt-image-1.5", "size": "1536x1024", "quality": "medium", "format": "png"},
-        "gemini": {"model": "imagen-3.0-generate-002", "aspect_ratio": "16:9",
-                   "safety_filter_level": "block_some", "person_generation": "allow_adult"},
-    },
-}
+OPENAI_TEXT_MODEL  = "gpt-4o"
+OPENAI_IMAGE_MODEL = "gpt-image-1.5"
+GEMINI_TEXT_MODEL  = "gemini-2.5-flash"
+GEMINI_IMAGE_MODEL = "gemini-2.5-flash-image"
 
 
 class AIProvider:
     """
     Singleton AI provider supporting OpenAI and Gemini.
-    Clients are lazy-loaded and cached on first use.
+    All text calls use web search grounding. Clients are lazy-loaded.
 
     Usage:
-        provider.generate("blog", user_prompt, system_prompt)
-        provider.generate("topic", user_prompt)
-        provider.generate("image", prompt)
+        provider.generate(user_prompt, system_prompt)   # text
+        provider.generate_image(prompt)                 # image
     """
 
     _instance = None
@@ -70,43 +58,35 @@ class AIProvider:
 
     # ── Public API ────────────────────────────────────────────────────────────
 
-    def generate(self, task: str, user_prompt: str, system_prompt: str = "") -> str | bytes:
-        cfg = MODEL_REGISTRY[task][self._provider]
-        if task == "image":
-            return self._image_call(user_prompt, cfg)
-        return self._text_call(system_prompt, user_prompt, cfg)
-
-    # ── Internal dispatch ─────────────────────────────────────────────────────
-
-    def _text_call(self, system_prompt: str, user_prompt: str, cfg: dict) -> str:
+    def generate(self, user_prompt: str, system_prompt: str = "") -> str:
         if self._provider == "openai":
-            return self._openai_text(system_prompt, user_prompt, cfg)
-        return self._gemini_text(system_prompt, user_prompt, cfg)
+            return self._openai_text(system_prompt, user_prompt)
+        return self._gemini_text(system_prompt, user_prompt)
 
-    def _image_call(self, prompt: str, cfg: dict) -> bytes:
+    def generate_image(self, prompt: str) -> bytes:
         if self._provider == "openai":
-            return self._openai_image(prompt, cfg)
-        return self._gemini_image(prompt, cfg)
+            return self._openai_image(prompt)
+        return self._gemini_image(prompt)
 
     # ── OpenAI ────────────────────────────────────────────────────────────────
 
-    def _openai_text(self, system_prompt: str, user_prompt: str, cfg: dict) -> str:
-        tools = [{"type": "web_search_preview"}] if cfg["web_search"] else []
+    def _openai_text(self, system_prompt: str, user_prompt: str) -> str:
         input_content = (
             [{"role": "system", "content": system_prompt}, {"role": "user", "content": user_prompt}]
             if system_prompt else user_prompt
         )
-        kwargs: dict = dict(model=cfg["model"], tools=tools, input=input_content)
-        if cfg["max_tokens"]:
-            kwargs["max_output_tokens"] = cfg["max_tokens"]
-        return self._openai_client.responses.create(**kwargs).output_text.strip()
+        return self._openai_client.responses.create(
+            model=OPENAI_TEXT_MODEL,
+            tools=[{"type": "web_search_preview"}],
+            input=input_content,
+        ).output_text.strip()
 
-    def _openai_image(self, prompt: str, cfg: dict) -> bytes:
+    def _openai_image(self, prompt: str) -> bytes:
         import base64
         response = self._openai_client.images.generate(
-            model=cfg["model"], prompt=prompt,
-            size=cfg["size"], quality=cfg["quality"],
-            output_format=cfg["format"], n=1,
+            model=OPENAI_IMAGE_MODEL, prompt=prompt,
+            size="1536x1024", quality="medium",
+            output_format="png", n=1,
         )
         b64 = response.data[0].b64_json
         if not b64:
@@ -115,32 +95,28 @@ class AIProvider:
 
     # ── Gemini ────────────────────────────────────────────────────────────────
 
-    def _gemini_text(self, system_prompt: str, user_prompt: str, cfg: dict) -> str:
+    def _gemini_text(self, system_prompt: str, user_prompt: str) -> str:
         from google.genai import types
-        config_kwargs: dict = {}
-        if system_prompt:
-            config_kwargs["system_instruction"] = system_prompt
-        if cfg["max_tokens"]:
-            config_kwargs["max_output_tokens"] = cfg["max_tokens"]
-        if cfg["web_search"]:
-            config_kwargs["tools"] = [types.Tool(google_search=types.GoogleSearch())]
-        response = self._gemini_client.models.generate_content(
-            model=cfg["model"],
-            contents=user_prompt,
-            config=types.GenerateContentConfig(**config_kwargs) if config_kwargs else None,
+        config = types.GenerateContentConfig(
+            tools=[types.Tool(google_search=types.GoogleSearch())],
+            **({"system_instruction": system_prompt} if system_prompt else {}),
         )
-        return response.text.strip()
+        return self._gemini_client.models.generate_content(
+            model=GEMINI_TEXT_MODEL,
+            contents=user_prompt,
+            config=config,
+        ).text.strip()
 
-    def _gemini_image(self, prompt: str, cfg: dict) -> bytes:
+    def _gemini_image(self, prompt: str) -> bytes:
         from google.genai import types
         response = self._gemini_client.models.generate_images(
-            model=cfg["model"],
+            model=GEMINI_IMAGE_MODEL,
             prompt=prompt,
             config=types.GenerateImagesConfig(
                 number_of_images=1,
-                aspect_ratio=cfg["aspect_ratio"],
-                safety_filter_level=cfg["safety_filter_level"],
-                person_generation=cfg["person_generation"],
+                aspect_ratio="16:9",
+                safety_filter_level="block_some",
+                person_generation="allow_adult",
             ),
         )
         return response.generated_images[0].image.image_bytes
