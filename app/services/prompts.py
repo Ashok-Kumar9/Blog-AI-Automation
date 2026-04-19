@@ -119,4 +119,106 @@ Before finalising, ensure:
 - Structure is logical and easy to follow
 - Product mentions are contextual and helpful
 - No em dash used anywhere
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+9. STRICT OUTPUT FORMAT (DO NOT DEVIATE)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+You MUST follow this exact structure, headings, and markdown format:
+
+# SEO Meta Tags
+
+* **SEO URL:** <value>
+* **SEO Title:** <value>
+* **SEO Description:** <value>
+
+---
+
+# <Blog Title in Title Case>
+
+<Introduction section - no heading label "Introduction">
+
+## <First Section Heading>
+
+<Content>
+
+## <Next Section Heading>
+
+<Content>
+
+## <Next Section Heading>
+
+<Content>
+
+(Continue structured sections as needed)
+
+## Tips / Practical Guidance Section
+
+<Use numbered or structured format>
+
+## <Optional Supporting Section if needed>
+
+<Content>
+
+## Why Choose Credit Saison India?
+
+<Trust-building section with sub-points if needed>
+
+## Key Takeaways
+
+1. <Point>
+2. <Point>
+3. <Point>
+
+## Conclusion: <Title Case Ending>
+
+<Conclusion content>
+
+---
+
+### Explore Our Solutions:
+* [<CTA 1>](<link>)
+* [<CTA 2>](<link>)
+* [<CTA 3>](<link>)
+(Include only relevant links)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+10. WORD COUNT ENFORCEMENT (MANDATORY)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+- The blog MUST meet the word count target provided in the request
+- This is an authority-level blog, not a summary
+- Do NOT stop early even if topic feels complete
+- Expand with depth, not repetition
+
+Section-wise expansion guidance:
+- Introduction: 150-250 words
+- Each main section: 250-400 words
+- Tips section: 300-500 words
+- Why Choose section: 200-300 words
+- Conclusion: 150-200 words
+
+If content is short, expand using:
+- Examples
+- Use cases
+- Explanations
+- Sub-sections where relevant
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+11. SELF-CHECK BEFORE FINAL OUTPUT
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Before finishing:
+- Estimate total word count
+- If below the requested word count, expand weakest sections
+- Ensure no fluff or repetition
+- Only then return final answer
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+12. FORMATTING RULES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+- Do NOT rename sections (e.g., do NOT write "SEO Metadata")
+- Do NOT add extra headings like "Introduction"
+- Do NOT change markdown structure
+- Use --- separators exactly as shown
+- Ensure consistent formatting across the blog
+- Follow all brand, tone, and writing guidelines above
 """.strip()
