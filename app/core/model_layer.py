@@ -1,21 +1,16 @@
 from abc import ABC, abstractmethod
-from typing import Optional
-
 from app.core.config import settings
 
-# ─── Central Model Registry ────────────────────────────────────────────────────
-# Model names come from settings/env — nothing hardcoded here.
-# To swap a model, set the corresponding env var in .env (see config.py).
 MODEL_REGISTRY: dict = {
     "openai": {
-        "blog":  {"model": settings.OPENAI_BLOG_MODEL,  "max_tokens": 6000, "web_search": True},
-        "topic": {"model": settings.OPENAI_TOPIC_MODEL, "max_tokens": None, "web_search": True},
-        "image": {"model": settings.OPENAI_IMAGE_MODEL, "size": "1536x1024", "quality": "medium", "format": "png"},
+        "blog":  {"model": "gpt-4o",  "max_tokens": 6000, "web_search": True},
+        "topic": {"model": "gpt-4o-mini", "max_tokens": None, "web_search": True},
+        "image": {"model": "gpt-image-1.5", "size": "1536x1024", "quality": "medium", "format": "png"},
     },
     "gemini": {
-        "blog":  {"model": settings.GEMINI_BLOG_MODEL,  "max_tokens": 6000, "web_search": True},
-        "topic": {"model": settings.GEMINI_TOPIC_MODEL, "max_tokens": None, "web_search": True},
-        "image": {"model": settings.GEMINI_IMAGE_MODEL, "aspect_ratio": "16:9",
+        "blog":  {"model": "gemini-2.0-flash",  "max_tokens": 6000, "web_search": True},
+        "topic": {"model": "gemini-2.0-flash", "max_tokens": None, "web_search": True},
+        "image": {"model": "imagen-3.0-generate-002", "aspect_ratio": "16:9",
                   "safety_filter_level": "block_some", "person_generation": "allow_adult"},
     },
 }
