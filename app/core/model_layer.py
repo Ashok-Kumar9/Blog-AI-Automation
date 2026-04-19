@@ -109,17 +109,17 @@ class AIProvider:
 
     def _gemini_image(self, prompt: str) -> bytes:
         from google.genai import types
-        response = self._gemini_client.models.generate_images(
+        response = self._gemini_client.models.generate_content(
             model=GEMINI_IMAGE_MODEL,
-            prompt=prompt,
-            config=types.GenerateImagesConfig(
-                number_of_images=1,
-                aspect_ratio="16:9",
-                safety_filter_level="block_some",
-                person_generation="allow_adult",
+            contents=prompt,
+            config=types.GenerateContentConfig(
+                response_modalities=["IMAGE", "TEXT"],
             ),
         )
-        return response.generated_images[0].image.image_bytes
+        for part in response.candidates[0].content.parts:
+            if part.inline_data is not None:
+                return part.inline_data.data
+        raise ValueError("Gemini image generation returned no image data.")
 
     def __repr__(self) -> str:
         return f"<AIProvider provider={self._provider} cached={list(self._clients)}>"

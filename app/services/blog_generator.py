@@ -51,4 +51,4 @@ def generate_blog(
     internal_links: List[InternalLink],
 ) -> str:
     user_prompt = build_user_prompt(topic, audience, word_count, specific_goal, internal_links)
-    return provider.generate_blog(system_prompt=SYSTEM_PROMPT, user_prompt=user_prompt)
+    return provider.generate(system_prompt=SYSTEM_PROMPT, user_prompt=user_prompt)
