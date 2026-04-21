@@ -27,7 +27,7 @@ Output format (strict):
 - Only the list
 """.strip()
 
-    raw = llm_provider.openai.generate(user_prompt=prompt)
+    raw = llm_provider.gemini.generate(user_prompt=prompt)
     topics = [
         line.lstrip("0123456789.-) ").strip().strip('"')
         for line in raw.splitlines()
