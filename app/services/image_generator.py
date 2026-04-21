@@ -33,7 +33,7 @@ STYLE:
 # WEB RESEARCH
 # -------------------------------
 def _research_topic(blog_title: str) -> str:
-    return llm_provider.openai.generate(
+    return llm_provider.gemini.generate(
         user_prompt=f"""\
 Search online and identify the key visual elements for this blog topic:
 "{blog_title}"

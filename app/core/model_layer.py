@@ -10,14 +10,6 @@ OPENAI_TITLE_MODEL = "gpt-4o"
 
 
 class GeminiClient:
-    """
-    Gemini sub-client.
-
-    Usage:
-        llm_provider.gemini.generate_blog(user_prompt, system_prompt)
-        llm_provider.gemini.generate_image(prompt)
-    """
-
     def __init__(self):
         self._client = None
 
@@ -63,13 +55,6 @@ class GeminiClient:
 
 
 class OpenAIClient:
-    """
-    OpenAI sub-client.
-
-    Usage:
-        llm_provider.openai.generate_title(user_prompt)
-    """
-
     def __init__(self):
         self._client = None
 
@@ -101,15 +86,6 @@ class OpenAIClient:
 
 
 class LLMProvider:
-    """
-    Singleton provider exposing Gemini and OpenAI sub-clients.
-
-    Usage:
-        llm_provider.gemini.generate_blog(user_prompt, system_prompt)
-        llm_provider.gemini.generate_image(prompt)
-        llm_provider.openai.generate_title(user_prompt)
-    """
-
     _instance = None
     _initialized = False
 
